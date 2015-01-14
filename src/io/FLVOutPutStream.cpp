@@ -12,26 +12,31 @@ FLVOutPutStream::FLVOutPutStream()
 	filename = 0;
 	previousTagSize = 0;
 	timestamp = 0;
+	oneframetime = 0;
+	framenum = 0;
 }
 
-FLVOutPutStream::FLVOutPutStream(char* file)
+FLVOutPutStream::FLVOutPutStream(const char* file,unsigned int framerate)
 {
 	filename = 0;
 	previousTagSize = 0;
 	timestamp = 0;
+	oneframetime = 0;
 	filename = new char[strlen(file)];
 	strcpy(filename,file);
+	oneframetime = 1000 / framerate;
+	framenum = 0;
 }
 
 FLVOutPutStream::~FLVOutPutStream()
 {
-	//cout << "~FLVOutPutStream" << endl;
 	if (file.is_open())
 	{
 		close();
 	}
 	previousTagSize = 0;
 	timestamp = 0;
+	oneframetime = 0;
 	if(filename)
 	{
 		delete [] filename;
@@ -39,7 +44,7 @@ FLVOutPutStream::~FLVOutPutStream()
 	}
 }
 
-bool FLVOutPutStream::writeBytes(char* bytes, int len)
+bool FLVOutPutStream::writeBytes(const char* bytes, unsigned int len)
 {
 	file.write(bytes, len);
 	flush();
@@ -48,8 +53,7 @@ bool FLVOutPutStream::writeBytes(char* bytes, int len)
 
 bool FLVOutPutStream::writeFileHeader()
 {
-	char fileHeader[9] =
-	{ 'F', 'L', 'V', 0x1, 0x1, 0x0, 0x0, 0x0, 0x9 };
+	char fileHeader[9] = { 'F', 'L', 'V', 0x1, 0x1, 0x0, 0x0, 0x0, 0x9 };
 	file.write(fileHeader, 9);
 	flush();
 	return true;
@@ -107,18 +111,17 @@ bool FLVOutPutStream::writeFrame(Bytes* bytes)
 
 bool FLVOutPutStream::writeFrame(Bytes* bytes,bool end)
 {
-	if(end)
-	{
-		timestamp -= 40;
-	}
+	this->timestamp = getTimeStamp();
 	FLVVideoTagBody* body = new FLVVideoTagBody();
 	body->setData(bytes);
-	bool w = writeData(VIDEO, body);
-	if(w)
-	{
-		timestamp += 40;
-	}
-	return w;
+	return writeData(VIDEO, body);
+}
+
+long FLVOutPutStream::getTimeStamp()
+{
+	long t = framenum * oneframetime;
+	framenum++;
+	return t;
 }
 
 bool FLVOutPutStream::flush()
@@ -129,8 +132,7 @@ bool FLVOutPutStream::flush()
 
 bool FLVOutPutStream::close()
 {
-	char fileHeader[4] =
-	{ 0x0, 0x0, 0x0, 0x10 };
+	char fileHeader[4] = { 0x0, 0x0, 0x0, 0x10 };
 	file.write(fileHeader, 4);
 	flush();
 	file.close();

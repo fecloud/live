@@ -13,8 +13,10 @@
 
 class FLVScriptTagBody: public FLVTagBody
 {
+
 private:
 	Struct obj;
+
 public:
 	FLVScriptTagBody();
 	virtual ~FLVScriptTagBody();

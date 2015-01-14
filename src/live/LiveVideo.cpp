@@ -33,7 +33,7 @@ bool VideoLive::init()
 
 VideoLive::VideoLive(char* server, int width, int height)
 {
-	output = new RTMPOutPutStream(server);
+	output = new RTMPOutPutStream(server, true, 30);
 	this->width = width;
 	this->height = height;
 	this->mstart = 0;
@@ -110,7 +110,6 @@ bool VideoLive::start()
 
 int cameraSourceCallback(void *cookie, void *data)
 {
-	cout << "cameraSourceCallback:" << time(NULL) << endl;
 	VideoLive* videoLive = (VideoLive*) cookie;
 
 	cedarv_encoder_t* venc_device = videoLive->venc_device;
@@ -122,24 +121,23 @@ int cameraSourceCallback(void *cookie, void *data)
 	v4l2_mem_map_t* p_v4l2_mem_map = GetMapmemAddress(getV4L2ctx(cameraDevice));
 
 	void *buffer = (void *) p_v4l2_mem_map->mem[p_buf->index];
-/*
+	/* */
 	result = venc_device->ioctrl(venc_device,
 			VENC_CMD_GET_ALLOCATE_INPUT_BUFFER, &input_buffer);
-	//cout << "VENC_CMD_GET_ALLOCATE_INPUT_BUFFER result:" <<  result << endl;
 	if (result == 0)
 	{
-		YUV422To420((unsigned char*) buffer, input_buffer.addrvirY,videoLive->width, videoLive->height);
-		venc_device->ioctrl(venc_device, VENC_CMD_FLUSHCACHE_ALLOCATE_INPUT_BUFFER, &input_buffer);
-		//cout << " VENC_CMD_FLUSHCACHE_ALLOCATE_INPUT_BUFFER" << endl;
-		result = venc_device->ioctrl(venc_device, VENC_CMD_ENQUENE_INPUT_BUFFER, &input_buffer);
-		//cout << " VENC_CMD_ENQUENE_INPUT_BUFFER result:" <<  result << endl;
+		YUV422To420((unsigned char*) buffer, input_buffer.addrvirY,
+				videoLive->width, videoLive->height);
+		venc_device->ioctrl(venc_device,
+				VENC_CMD_FLUSHCACHE_ALLOCATE_INPUT_BUFFER, &input_buffer);
+		result = venc_device->ioctrl(venc_device, VENC_CMD_ENQUENE_INPUT_BUFFER,
+				&input_buffer);
 		if (result < 0)
 		{
-		//	cout << "enquene input buffer is full" << endl;
 			usleep(10 * 1000);
 		}
 	}
-	*/
+
 	cameraDevice->returnFrame(cameraDevice, p_buf->index);
 	return 1;
 }
@@ -161,7 +159,8 @@ void* encoderThread(void* pThreadData)
 		memset(&input_buffer, 0, sizeof(VencInputBuffer));
 
 		// dequene buffer from input buffer quene;
-		result = venc_device->ioctrl(venc_device, VENC_CMD_DEQUENE_INPUT_BUFFER, &input_buffer);
+		result = venc_device->ioctrl(venc_device, VENC_CMD_DEQUENE_INPUT_BUFFER,
+				&input_buffer);
 
 		if (result < 0)
 		{
@@ -170,40 +169,40 @@ void* encoderThread(void* pThreadData)
 		}
 		//cout << "enquene input buffer not empty" << endl;
 
-		result = venc_device->ioctrl(venc_device, VENC_CMD_ENCODE, &input_buffer);
+		result = venc_device->ioctrl(venc_device, VENC_CMD_ENCODE,
+				&input_buffer);
 
-		//cout << "VENC_CMD_ENCODE result:" <<  result << endl;
 		// return the buffer to the alloc buffer quene after encoder
-		venc_device->ioctrl(venc_device, VENC_CMD_RETURN_ALLOCATE_INPUT_BUFFER, &input_buffer);
+		venc_device->ioctrl(venc_device, VENC_CMD_RETURN_ALLOCATE_INPUT_BUFFER,
+				&input_buffer);
 
 		if (result == 0)
 		{
 			memset(&output_buffer, 0, sizeof(VencOutputBuffer));
-			result = venc_device->ioctrl(venc_device, VENC_CMD_GET_BITSTREAM, &output_buffer);
-
+			result = venc_device->ioctrl(venc_device, VENC_CMD_GET_BITSTREAM,
+					&output_buffer);
+			/**/
 			H264MemReader reader;
 			reader.setVencOutputBuffer(&output_buffer);
-			while (true)
-			{
-				H264NALU* bytes = (H264NALU*) reader.reader();
-				if (bytes)
-				{
-					videoLive->flvEncoder->encoder(bytes);
-					delete bytes;
-					bytes = NULL;
-				}
-				else
-				{
-					//读取失败
-					break;
-				}
-
+			/**/
+			H264NALU* bytes = (H264NALU*) reader.reader();
+			if (bytes)
+			{	
+				videoLive->flvEncoder->encoder(bytes);
+				bytes->setData(NULL);
+				delete bytes;
+				bytes = NULL;
 			}
-
+			else
+			{
+				//读取失败
+				break;
+			}
 
 			if (result == 0)
 			{
-				venc_device->ioctrl(venc_device, VENC_CMD_RETURN_BITSTREAM, &output_buffer);
+				venc_device->ioctrl(venc_device, VENC_CMD_RETURN_BITSTREAM,
+						&output_buffer);
 			}
 		}
 		else
@@ -228,18 +227,17 @@ bool VideoLive::startCameraAndEnCoder()
 
 	/* start encoder */
 	mstart = 1;
-	/* create encode thread
-	int err = pthread_create(&thread_enc_id, NULL, encoderThread,this);
+	/* create encode thread */
+	int err = pthread_create(&thread_enc_id, NULL, encoderThread, this);
 	if (err || !thread_enc_id)
 	{
 		cout << "Create thread_enc_id fail !\n" << endl;
-	}else
+	}
+	else
 	{
 		void* status;
-		pthread_join(thread_enc_id,&status);
+		pthread_join(thread_enc_id, &status);
 	}
-*/
-	sleep(10);
 
 	return true;
 }

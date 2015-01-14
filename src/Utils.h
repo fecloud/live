@@ -8,6 +8,9 @@
 #ifndef UTILS_H_
 #define UTILS_H_
 
+#include <time.h>
+#include <sys/time.h>
+
 //extern "C" {
 //	int gettimeofday(struct timeval *tv, struct timezone *tz);
 //}
@@ -69,5 +72,9 @@
 
 void YUV422To420(unsigned char yuv422[], unsigned char yuv420[], unsigned int width,
 		unsigned int height);
+/**
+ * 当前的毫秒
+ */
+long long current_time();
 
 #endif /* UTILS_H_ */

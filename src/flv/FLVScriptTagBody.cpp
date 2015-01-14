@@ -16,7 +16,6 @@ FLVScriptTagBody::FLVScriptTagBody()
 }
 FLVScriptTagBody::~FLVScriptTagBody()
 {
-	cout << "~FLVScriptTagBody" <<this << endl;
 }
 
 void FLVScriptTagBody::decoderBoby(Bytes *bytes)

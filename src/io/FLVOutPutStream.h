@@ -18,21 +18,29 @@
 #include "../flv/FLVVideoTagBody.h"
 
 using namespace std;
+
 class FLVOutPutStream: public MediaOutputStream
 {
+
 private:
-	char*filename;
+	char* filename;
+	unsigned long framenum;
 	
 protected:
 	ofstream file;
+	/**
+	 * 写入FLV9个字节的头
+	 */
 	bool writeFileHeader();
-	int previousTagSize;
-	long timestamp;
+	unsigned int previousTagSize;
+	unsigned long timestamp;
+	unsigned int oneframetime;
 	virtual bool writeData(char,FLVTagBody*);
+	virtual long getTimeStamp();
 
 public:
 	FLVOutPutStream();
-	FLVOutPutStream(char*);
+	FLVOutPutStream(const char*,unsigned int);
 	virtual ~FLVOutPutStream();
 	virtual bool open();
 	virtual bool setParam(Bytes*);
@@ -41,7 +49,8 @@ public:
 	virtual bool writeFrame(Bytes*,bool);
 	virtual bool flush();
 	virtual bool close();
-	bool writeBytes(char*, int);
+	bool writeBytes(const char*, unsigned int);
+
 };
 
 #endif /* FLVOUTPUTSTREAM_H_ */

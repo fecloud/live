@@ -21,10 +21,11 @@ class RTMPOutPutStream: public FLVOutPutStream {
 private:
 	char* url;
 	bool live;
-	unsigned int nsleep;
+	long long pretime;
 
 protected:
 	virtual bool writeData(char, FLVTagBody*);
+	virtual long getTimeStamp();
 
 public:
 	RTMPOutPutStream(const char*, bool, unsigned int);

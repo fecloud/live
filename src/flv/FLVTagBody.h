@@ -15,15 +15,15 @@ class FLVTagBody
 {
 
 protected:
-	Bytes *data;
+	Bytes* data;
 
 public:
 	FLVTagBody()
 	{
+		data = NULL;
 	}
 	virtual ~FLVTagBody()
 	{
-		//std::cout << "FLVTagBody delete data" << std::endl;
 		if (data)
 			delete data;
 	}
@@ -31,7 +31,7 @@ public:
 	{
 		return data;
 	}
-	void setData(Bytes*bytes)
+	void setData(Bytes* bytes)
 	{
 		this->data = bytes;
 	}

@@ -15,7 +15,6 @@ Bytes::Bytes() {
 	data = NULL;
 	length = 0;
 	cpostion = 0;
-	cpostion = 0;
 }
 
 Bytes::Bytes(char*data, int length) {
@@ -33,8 +32,9 @@ Bytes::Bytes(int length) {
 }
 
 Bytes::~Bytes() {
-//	cout << "~Bytes" << endl;
-	delete[] data;
+
+	if(data)
+		delete[] data;
 	data = NULL;
 	length = 0;
 	cpostion = 0;

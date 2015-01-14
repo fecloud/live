@@ -17,6 +17,8 @@ H264MemReader::~H264MemReader()
 	isHeader = false;
 	length = 0;
 	postion = 0;
+	if(data)
+		delete [] data;
 	data = NULL;
 
 }
@@ -34,20 +36,16 @@ void H264MemReader::setVencOutputBuffer(VencOutputBuffer* outputBuffer)
 {
 	this->postion = 0;
 	this->isHeader = false;
+	this->data = NULL;
+	this->length = 0;
 	if (outputBuffer->size0 > 0)
 	{
-		//cout << "setVencOutputBuffer" << endl;
-		//cout << "setVencOutputBuffer size0:" << outputBuffer->size0 << " size1:" << outputBuffer->size1 << endl;
 		this->length = outputBuffer->size0 + outputBuffer->size1;
-		//cout << "length:" << length << endl;
 		data = new char[length];
 		memcpy(data, outputBuffer->ptr0, outputBuffer->size0);
-		//cout << "memcpy size0"  << endl;
 		if (outputBuffer->size1 > 0)
-		{
-			memcpy(&data[outputBuffer->size0], outputBuffer->ptr0,
+			memcpy(&data[outputBuffer->size0], outputBuffer->ptr1,
 					outputBuffer->size1);
-		}
 	}
 
 }
@@ -125,7 +123,14 @@ H264NALU* H264MemReader::readVencSeqHeader()
 
 H264NALU* H264MemReader::readVencOutputBuffer()
 {
-	return readVencSeqHeader();
+	if (data)
+	{
+		H264NALU* bytes = new H264NALU(&data[4],length - 4);
+		bytes->setType(0x1F & data[4]);
+		bytes->flip();
+		return bytes;
+	}
+	return NULL;
 }
 
 Bytes* H264MemReader::reader()

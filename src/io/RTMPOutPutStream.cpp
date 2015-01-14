@@ -4,25 +4,22 @@
  *  Created on: 2014-12-25
  *      Author: maygolf
  */
-#include <cstring>
+#include <string.h>
 
 #include "RTMPOutPutStream.h"
+#include "../Utils.h"
 
 RTMP*rtmp = NULL; //rtmp应用指针
 RTMPPacket* packet = NULL; //rtmp包结构
 
-RTMPOutPutStream::RTMPOutPutStream()
-{
-	url = 0;
-}
-
-RTMPOutPutStream::RTMPOutPutStream(const char* url, bool live,  unsigned int framerate)
+RTMPOutPutStream::RTMPOutPutStream(const char* url, bool live,  unsigned int framerate = 25)
 {
 	cout << "url:" << url << endl;
 	this->url = new char[strlen(url) + 1];
 	strcpy(this->url, url);
 	this->live = live;
-	this->nsleep = 1000 / framerate;
+	oneframetime = 1000 / framerate;
+	pretime = 0;
 }
 
 RTMPOutPutStream::~RTMPOutPutStream()
@@ -31,7 +28,7 @@ RTMPOutPutStream::~RTMPOutPutStream()
 		delete[] url;
 	url = 0;
 	live = false;
-	nsleep = 0;
+	pretime = 0;
 }
 
 bool RTMPOutPutStream::setParam(Bytes* bytes)
@@ -74,11 +71,10 @@ bool RTMPOutPutStream::writeData(char type, FLVTagBody* body)
 	delete body;
 	body = NULL;
 
-	//cout << "timestamp:" << timestamp << endl;
 	if (RTMP_IsConnected(rtmp) && RTMP_SendPacket(rtmp, packet, 0))
 	{
-		if (nsleep)
-			usleep(39000);
+		if (!live)
+			usleep(oneframetime * 1000);
 		result = true;
 	}
 	else
@@ -90,6 +86,28 @@ bool RTMPOutPutStream::writeData(char type, FLVTagBody* body)
 	packet = NULL;
 
 	return result;
+}
+
+long RTMPOutPutStream::getTimeStamp()
+{
+	if(live)
+	{
+		if(pretime == 0)
+		{
+			pretime = current_time();
+		}else
+		{
+			long long tmp = current_time();
+			long long lost = tmp - pretime;
+			pretime = tmp;
+			timestamp +=lost;
+			return timestamp;
+		}
+	}else
+	{
+		return FLVOutPutStream::getTimeStamp();
+	}
+	return 0;
 }
 
 bool RTMPOutPutStream::open()

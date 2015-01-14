@@ -47,7 +47,7 @@ void YUV422To420(unsigned char yuv422[], unsigned char yuv420[], unsigned int wi
 	{
 		unsigned int start = j * length2 ;
 
-		for (k = 0; k < width / 2; k++)
+		for (k = 0; k < length ; k++)
 		{
 			offset = start + k * 4;
 			yuv420[i++] = yuv422[offset + 1];
@@ -65,5 +65,14 @@ void YUV422To420(unsigned char yuv422[], unsigned char yuv420[], unsigned int wi
 	cout << "Cost time: " << cost_time << " ms" << endl;
 #endif
 
+}
+
+long long current_time()
+{
+	struct timeval t_start;
+	//get start time
+	gettimeofday(&t_start, 0);
+	long long t = ((long long)t_start.tv_sec) * 1000 + ( long long)t_start.tv_usec / 1000;
+	return t;
 }
 
