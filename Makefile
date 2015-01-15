@@ -27,16 +27,16 @@ include src/encoder/Makefile
 include src/camera/Makefile
 include src/live/Makefile
 
-TARGET :=cdev
+TARGET :=live
 
-all: librtmp cdev
+all: librtmp live
 
 FORCE:
 
 librtmp: FORCE
 	@cd ./src/librtmp; $(MAKE) all
 
-cdev: $(OBJS)
+live: $(OBJS)
 	$(CXX)  -Lsrc/librtmp -L./lib -o $@ $(OBJS) -lrtmp -lpthread -lvencoder -ldl
 
 help:
