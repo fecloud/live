@@ -4,16 +4,18 @@
  *  Created on: 2015-1-8
  *      Author: maygolf
  */
-#include "Utils.h"
+#include "utils.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
 
 #if DEBUG
-#include <iostream>
 #include <stdio.h>
 #include <sys/time.h>
 #include <time.h>
 #endif
 
-using namespace std;
 
 /**
  * YUV422 packed 格式 转成yuv420sp(nv12)
@@ -75,4 +77,8 @@ long long current_time()
 	long long t = ((long long)t_start.tv_sec) * 1000 + ( long long)t_start.tv_usec / 1000;
 	return t;
 }
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 

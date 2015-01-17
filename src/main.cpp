@@ -11,8 +11,9 @@
 #include "io/FLVOutPutStream.h"
 #include "io/RTMPOutPutStream.h"
 #include "encoder/FLVEncoder.h"
-#include "Utils.h"
+#include "utils.h"
 #include "live/LiveVideo.h"
+#include "media/videorecorder.h"
 
 char h264[] = "out.h264";
 char parflv[] = "test.flv";
@@ -118,16 +119,26 @@ void testH264ToRTMP()
 	output = NULL;
 }
 
-void testCamera(void)
+void cdear(int type,void* data)
 {
 
+}
+
+void testCamera(void)
+{
+	Video_Recorder* recorder = create_video_recorder(640, 480);
+	recorder->setDataCallBack(recorder,(void*)cdear);
+	start_video_recorder(recorder);
+	stop_video_recorder(recorder);
+	free(recorder);
+	recorder = NULL;
 }
 
 int main(int argc, char **argv)
 {
 //	cout << isBigEndian() << endl;
 	time_t t = time(NULL);
-	printf("%d\n", t);
+	printf("%ld\n", t);
 
 //	while (true) {
 //		testParseH264();
@@ -141,12 +152,13 @@ int main(int argc, char **argv)
 //	char* s = new char[100];
 //	delete[] s;
 //	}
-	VideoLive live(outrtmp, 640, 480);
-	live.init();
-	live.start();
-	live.stop();
+	// VideoLive live(outrtmp, 640, 480);
+	// live.init();
+	// live.start();
+	// live.stop();
+	testCamera();
 	time_t t2 = time(NULL);
-	printf("%d\n", t2);
+	printf("%ld\n", t2);
 	return 0;
 }
 

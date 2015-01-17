@@ -26,6 +26,7 @@ include src/io/Makefile
 include src/encoder/Makefile
 include src/camera/Makefile
 include src/live/Makefile
+include src/media/Makefile
 
 TARGET :=live
 

@@ -1,3 +1,6 @@
+#ifndef CAMERASOURCE_H
+#define CAMERASOURCE_H
+
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
@@ -29,3 +32,4 @@ void* getV4L2ctx(AWCameraDevice *p);
 }
 #endif /* __cplusplus */
 
+#endif /* CAMERASOURCE_H */

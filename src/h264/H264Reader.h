@@ -14,7 +14,7 @@
 #include <cstring>
 #include <string.h>
 
-#include "../Utils.h"
+#include "../utils.h"
 #include "H264NALU.h"
 #include "../io/MediaInputStream.h"
 

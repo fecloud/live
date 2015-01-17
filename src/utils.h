@@ -8,6 +8,10 @@
 #ifndef UTILS_H_
 #define UTILS_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 #include <time.h>
 #include <sys/time.h>
 
@@ -76,5 +80,9 @@ void YUV422To420(unsigned char yuv422[], unsigned char yuv420[], unsigned int wi
  * 当前的毫秒
  */
 long long current_time();
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* UTILS_H_ */
