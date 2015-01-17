@@ -121,7 +121,8 @@ void testH264ToRTMP()
 
 void cdear(int type,void* data)
 {
-
+	time_t t = time(NULL);
+	cout <<  t << " cdear type:" << type << endl;
 }
 
 void testCamera(void)

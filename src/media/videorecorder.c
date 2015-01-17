@@ -10,14 +10,25 @@ extern "C" {
 
  #include "videorecorder.h"
 
+int setDataCallBack(struct Video_Recorder* p, void* callBack)
+{
+	if(p)
+	{
+		p->callback = callBack;
+		return 1;
+	}
+	return 0;
+}
+
  Video_Recorder* create_video_recorder(int width,int height)
  {
  	Video_Recorder* context = NULL;
  	context = (Video_Recorder*)malloc(sizeof(Video_Recorder));
-
+ 	memset(context,sizeof(Video_Recorder),1);
  	context->width = width;
  	context->height = height;
 
+ 	context->setDataCallBack = setDataCallBack;
  	return context;
 
  }
@@ -109,24 +120,11 @@ static void* encoderThread(void* pThreadData)
 
 }
 
-int setDataCallBack(struct Video_Recorder* p, void* callBack)
-{
-	if(p)
-	{
-		p->callback = callBack;
-		return 1;
-	}
-	return 0;
-}
+
 
 
  int start_video_recorder(Video_Recorder* recorder)
- {
-
- 	if(!recorder || recorder->setDataCallBack)
- 		return 0;
-
-	recorder->setDataCallBack = setDataCallBack;
+{
  	// init base config param
 	recorder->base_cfg.codectype = VENC_CODEC_H264;
 
