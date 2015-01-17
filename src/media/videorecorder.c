@@ -102,7 +102,7 @@ static void* encoderThread(void* pThreadData)
 			//callback header
 			if(recorder->callback)
 			{
-				recorder->callback(1, &recorder->header_data);
+				recorder->callback(1, &output_buffer);
 			}
 
 			if (result == 0)

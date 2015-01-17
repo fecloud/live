@@ -119,8 +119,23 @@ void testH264ToRTMP()
 	output = NULL;
 }
 
+FILE *outfile;
+
 void cdear(int type,void* data)
 {
+	if(type)
+	{
+		VencSeqHeader* header = (VencSeqHeader*)data;	
+		fwrite(header->bufptr,header->length,1,outfile);
+	}else
+	{
+		VencOutputBuffer* out = (VencOutputBuffer*)data;
+		fwrite(out->ptr0,out->size0,1,outfile);
+		if(out->size1)
+		{
+			fwrite(out->ptr1,out->size1,1,outfile);
+		}
+	}
 	time_t t = time(NULL);
 	cout <<  t << " cdear type:" << type << endl;
 }
@@ -137,6 +152,7 @@ void testCamera(void)
 
 int main(int argc, char **argv)
 {
+	outfile = fopen("out.h264","wb");
 //	cout << isBigEndian() << endl;
 	time_t t = time(NULL);
 	printf("%ld\n", t);
