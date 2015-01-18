@@ -24,7 +24,7 @@ int setDataCallBack(struct Video_Recorder* p, void* callBack)
  {
  	Video_Recorder* context = NULL;
  	context = (Video_Recorder*)malloc(sizeof(Video_Recorder));
- 	memset(context,sizeof(Video_Recorder),1);
+ 	memset(context, 0 , sizeof(Video_Recorder));
  	context->width = width;
  	context->height = height;
 
@@ -35,6 +35,7 @@ int setDataCallBack(struct Video_Recorder* p, void* callBack)
 
 static int cameraSourceCallback(void *cookie, void *data)
 {
+	printf("cameraSourceCallback %lld\n",current_time());
 	Video_Recorder* recorder = (Video_Recorder*) cookie;
 
 	cedarv_encoder_t* venc_device = recorder->venc_device;
@@ -55,7 +56,7 @@ static int cameraSourceCallback(void *cookie, void *data)
 		result = venc_device->ioctrl(venc_device, VENC_CMD_ENQUENE_INPUT_BUFFER,&input_buffer);
 		if (result < 0)
 		{
-			usleep(10 * 1000);
+			usleep(1000);
 		}
 	}
 
@@ -128,7 +129,7 @@ static void* encoderThread(void* pThreadData)
  	// init base config param
 	recorder->base_cfg.codectype = VENC_CODEC_H264;
 
-	recorder->base_cfg.framerate = 30;
+	recorder->base_cfg.framerate = 25;
 	recorder->base_cfg.input_width = recorder->width;
 	recorder->base_cfg.input_height = recorder->height;
 	recorder->base_cfg.dst_width = recorder->width;

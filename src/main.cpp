@@ -169,10 +169,10 @@ int main(int argc, char **argv)
 //	char* s = new char[100];
 //	delete[] s;
 //	}
-	// VideoLive live(outrtmp, 640, 480);
-	// live.init();
-	// live.start();
-	// live.stop();
+//	 VideoLive live(outrtmp, 640, 480);
+//	 live.init();
+//	 live.start();
+//	 live.stop();
 	testCamera();
 	time_t t2 = time(NULL);
 	printf("%ld\n", t2);
