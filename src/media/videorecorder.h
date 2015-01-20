@@ -31,7 +31,7 @@ extern "C" {
 #include "../utils.h"
 
 
-typedef void (*DataCallBack)(int type, void* data);
+typedef void (*DataCallBack)(int type, void* cookie,void* data);
 
 typedef struct Video_Recorder
 {
@@ -47,7 +47,8 @@ typedef struct Video_Recorder
 	int width;
 	int height;
 	DataCallBack callback;
-	int (*setDataCallBack)(struct Video_Recorder*p, void* callBack);
+	void* cookie;
+	int (*setDataCallBack)(struct Video_Recorder*p, void* cookie, void* callBack);
 	WaterMark*	waterMark;
 } Video_Recorder;
 

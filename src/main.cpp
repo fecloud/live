@@ -121,7 +121,7 @@ void testH264ToRTMP()
 
 FILE *outfile;
 
-void cdear(int type,void* data)
+void cdear(int type,void* cookie,void* data)
 {
 	if(type)
 	{
@@ -143,7 +143,7 @@ void cdear(int type,void* data)
 void testCamera(void)
 {
 	Video_Recorder* recorder = create_video_recorder(640, 480);
-	recorder->setDataCallBack(recorder,(void*)cdear);
+	recorder->setDataCallBack(recorder,(void*)cdear,(void*)cdear);
 	start_video_recorder(recorder);
 	stop_video_recorder(recorder);
 	free(recorder);
@@ -152,7 +152,7 @@ void testCamera(void)
 
 int main(int argc, char **argv)
 {
-	outfile = fopen("out.h264","wb");
+//	outfile = fopen("out.h264","wb");
 //	cout << isBigEndian() << endl;
 	time_t t = time(NULL);
 	printf("%ld\n", t);
@@ -169,11 +169,11 @@ int main(int argc, char **argv)
 //	char* s = new char[100];
 //	delete[] s;
 //	}
-//	 VideoLive live(outrtmp, 640, 480);
-//	 live.init();
-//	 live.start();
-//	 live.stop();
-	testCamera();
+	 VideoLive live(outrtmp, 640, 480);
+	 live.init();
+	 live.start();
+	 live.stop();
+//	testCamera();
 	time_t t2 = time(NULL);
 	printf("%ld\n", t2);
 	return 0;

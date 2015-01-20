@@ -106,18 +106,35 @@ static int data_convert(int input, int length, int *output)
 
 }
 
-static int addMark(char* target,unsigned int w,unsigned int h, int x, int y, WaterMark_Template* src)
+inline int addMarkUV(unsigned char* target,unsigned int offset)
 {
-	char o = 0;
-	unsigned int i,j;
+	target[offset] = 0x10;
+	target[offset +1] = 0x70;
+	return 1;
+}
+
+static int addMark(unsigned char* target,unsigned int w,unsigned int h, int x, int y, WaterMark_Template* src)
+{
+
+	unsigned int i,j,offset;
+	unsigned int uvoffset = w * h;
 	// y
 	for (i = 0; i < src->height; i++)
 	{
 		for (j = 0; j < src->width; j++)
 		{
-			o = src->data[(src->width * i + j)];
-			if (-1 != o)
+			char o = src->data[(src->width * i + j)];
+//			if (Transparent_Y != o)
+//			{
 				target[(w * (y + i) + x + j)] = o;
+				if(i % 2 ==0 &&  j%2 == 0 )
+				{
+					//设置uv
+//					printf("i:%d j:%d\n",i,j);
+					offset = uvoffset + w * i + j;
+					addMarkUV(target,offset);
+				}
+//			}
 		}
 	}
 
@@ -152,9 +169,9 @@ static int addMark(char* target,unsigned int w,unsigned int h, int x, int y, Wat
 	return 1;
 }
 
-void waterMarkShowTime(WaterMark* waterMark, char* src,unsigned int w,unsigned int h, unsigned int x, unsigned int y)
+void waterMarkShowTime(WaterMark* waterMark, unsigned char* src,unsigned int w,unsigned int h, unsigned int x, unsigned int y)
 {
-	printf("waterMarkShowTime %d\n",__LINE__);
+	//printf("waterMarkShowTime %d\n",__LINE__);
 	time_t	now;
 	struct	tm   *timenow;
 

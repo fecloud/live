@@ -24,7 +24,7 @@ int waterMark_init(WaterMark*);
 
 int waterMark_exit(WaterMark*);
 
-void waterMarkShowTime(WaterMark* waterMark, char* src,unsigned int w,unsigned int h, unsigned int x, unsigned int y);
+void waterMarkShowTime(WaterMark* waterMark, unsigned char* src,unsigned int w,unsigned int h, unsigned int x, unsigned int y);
 
 #ifdef __cplusplus
 }

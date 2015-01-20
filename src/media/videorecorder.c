@@ -10,11 +10,12 @@ extern "C" {
 
  #include "videorecorder.h"
 
-int setDataCallBack(struct Video_Recorder* p, void* callBack)
+int setDataCallBack(struct Video_Recorder* p,void* cookie, void* callBack)
 {
 	if(p)
 	{
 		p->callback = callBack;
+		p->cookie = cookie;
 		return 1;
 	}
 	return 0;
@@ -35,7 +36,7 @@ int setDataCallBack(struct Video_Recorder* p, void* callBack)
 
 static int cameraSourceCallback(void *cookie, void *data)
 {
-	printf("cameraSourceCallback %lld\n",current_time());
+//	printf("cameraSourceCallback %lld\n",current_time());
 	Video_Recorder* recorder = (Video_Recorder*) cookie;
 
 	cedarv_encoder_t* venc_device = recorder->venc_device;
@@ -51,10 +52,10 @@ static int cameraSourceCallback(void *cookie, void *data)
 	result = venc_device->ioctrl(venc_device,VENC_CMD_GET_ALLOCATE_INPUT_BUFFER, &input_buffer);
 	if (result == 0)
 	{
-		printf("s:%lld\n",current_time());
+		//printf("s:%lld\n",current_time());
 		YUV422To420((unsigned char*) buffer, input_buffer.addrvirY,recorder->width, recorder->height);
 		waterMarkShowTime(recorder->waterMark,input_buffer.addrvirY,recorder->width,recorder->height, 10, 10);
-		printf("e:%lld\n",current_time());
+		//printf("e:%lld\n",current_time());
 		input_buffer.addrvirC = input_buffer.addrvirY + recorder->width * recorder->height;
 		venc_device->ioctrl(venc_device,VENC_CMD_FLUSHCACHE_ALLOCATE_INPUT_BUFFER, &input_buffer);
 		result = venc_device->ioctrl(venc_device, VENC_CMD_ENQUENE_INPUT_BUFFER,&input_buffer);
@@ -112,7 +113,7 @@ static void* encoderThread(void* pThreadData)
 			//callback header
 			if(recorder->callback)
 			{
-				recorder->callback(1, &output_buffer);
+				recorder->callback(1,recorder->cookie, &output_buffer);
 			}
 
 			if (result == 0)
@@ -166,7 +167,7 @@ static void* encoderThread(void* pThreadData)
 	//callback header
 	if(recorder->callback)
 	{
-		recorder->callback(0, &recorder->header_data);
+		recorder->callback(0, recorder->cookie, &recorder->header_data);
 	}
 
 	recorder->cameraDevice = CreateCamera(recorder->width, recorder->height);
