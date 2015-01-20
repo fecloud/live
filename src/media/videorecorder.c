@@ -51,7 +51,11 @@ static int cameraSourceCallback(void *cookie, void *data)
 	result = venc_device->ioctrl(venc_device,VENC_CMD_GET_ALLOCATE_INPUT_BUFFER, &input_buffer);
 	if (result == 0)
 	{
+		printf("s:%lld\n",current_time());
 		YUV422To420((unsigned char*) buffer, input_buffer.addrvirY,recorder->width, recorder->height);
+		waterMarkShowTime(recorder->waterMark,input_buffer.addrvirY,recorder->width,recorder->height, 10, 10);
+		printf("e:%lld\n",current_time());
+		input_buffer.addrvirC = input_buffer.addrvirY + recorder->width * recorder->height;
 		venc_device->ioctrl(venc_device,VENC_CMD_FLUSHCACHE_ALLOCATE_INPUT_BUFFER, &input_buffer);
 		result = venc_device->ioctrl(venc_device, VENC_CMD_ENQUENE_INPUT_BUFFER,&input_buffer);
 		if (result < 0)
@@ -90,6 +94,11 @@ static void* encoderThread(void* pThreadData)
 		}
 		//cout << "enquene input buffer not empty" << endl;
 
+
+//
+//		cedarx_cache_op(input_buffer.addrvirY,
+//						input_buffer.addrvirY + recorder->waterMark->bgInfo.width * recorder->waterMark->bgInfo.height * 3/2, 0);
+
 		result = venc_device->ioctrl(venc_device, VENC_CMD_ENCODE,&input_buffer);
 
 		// return the buffer to the alloc buffer quene after encoder
@@ -121,9 +130,6 @@ static void* encoderThread(void* pThreadData)
 
 }
 
-
-
-
  int start_video_recorder(Video_Recorder* recorder)
 {
  	// init base config param
@@ -145,6 +151,10 @@ static void* encoderThread(void* pThreadData)
 	cedarx_hardware_init(0);
 	printf("%s\n", "cedarx_hardware_init");
 	printf("AWCodec version %s\n" , getCodecVision());
+
+	recorder->waterMark = malloc(sizeof(WaterMark));
+	memset(recorder->waterMark, 0x0, sizeof(WaterMark));
+	waterMark_init(recorder->waterMark);
 
 	recorder->venc_device = cedarvEncInit();
 
@@ -193,6 +203,10 @@ static void* encoderThread(void* pThreadData)
 
 	DestroyCamera(recorder->cameraDevice);
 	recorder->cameraDevice = NULL;
+
+	waterMark_exit(recorder->waterMark);
+	free(recorder->waterMark);
+	recorder->waterMark = NULL;
 
 	recorder->venc_device->ioctrl(recorder->venc_device, VENC_CMD_CLOSE, 0);
 	cedarvEncExit(recorder->venc_device);

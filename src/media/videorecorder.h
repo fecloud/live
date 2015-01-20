@@ -27,6 +27,7 @@ extern "C" {
 #include "../camera/V4L2.h"
 #include "../vencoder/cedarv_osal_linux.h"
 
+#include "water_mark.h"
 #include "../utils.h"
 
 
@@ -47,6 +48,7 @@ typedef struct Video_Recorder
 	int height;
 	DataCallBack callback;
 	int (*setDataCallBack)(struct Video_Recorder*p, void* callBack);
+	WaterMark*	waterMark;
 } Video_Recorder;
 
 
