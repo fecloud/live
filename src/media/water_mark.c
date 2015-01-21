@@ -128,13 +128,13 @@ static int addMark(unsigned char* target,unsigned int w,unsigned int h, int x, i
 //			if (Transparent_Y != o)
 //			{
 				target[(w * (y + i) + x + j)] = o;
-				if(i % 2 ==0 &&  j%2 == 0 )
-				{
-					//璁剧疆uv
-//					printf("i:%d j:%d\n",i,j);
-					offset = uvoffset + w * i + j;
-					addMarkUV(target,offset);
-				}
+//				if(i % 2 ==0 &&  j%2 == 0 )
+//				{
+//					//璁剧疆uv
+////					printf("i:%d j:%d\n",i,j);
+//					offset = uvoffset + w * i + j;
+//					addMarkUV(target,offset);
+//				}
 //			}
 		}
 	}

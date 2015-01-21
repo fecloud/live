@@ -143,7 +143,7 @@ static void* encoderThread(void* pThreadData)
 	recorder->base_cfg.dst_height = recorder->height;
 	recorder->base_cfg.maxKeyInterval = 25;
 	recorder->base_cfg.inputformat = VENC_PIXEL_YUV420; //uv combined
-	recorder->base_cfg.targetbitrate = 2 * 1024 * 1024;
+	recorder->base_cfg.targetbitrate = H264_TB;
 
 	// init allocate param
 	recorder->alloc_parm.buffernum = 4;

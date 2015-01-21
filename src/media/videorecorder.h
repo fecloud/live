@@ -30,6 +30,10 @@ extern "C" {
 #include "water_mark.h"
 #include "../utils.h"
 
+//h264编码码率
+#ifndef H264_TB
+#define H264_TB 1024 * 1024
+#endif
 
 typedef void (*DataCallBack)(int type, void* cookie,void* data);
 
