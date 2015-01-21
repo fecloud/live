@@ -13,37 +13,45 @@ extern "C"
 #include "water_template.h"
 #include "water_mark.h"
 
-static char* get_template(int i)
+#define TEMPLATE_SET_VALUE(DATA) wm->width = DATA[0]; \
+	wm->height = DATA[1]; \
+	wm->data = malloc(wm->width * wm->height); \
+	memcpy(wm->data,&DATA[2],wm->width * wm->height); \
+	break; \
+
+WaterMark_Template* get_template(int i)
 {
+	WaterMark_Template* wm = (WaterMark_Template*) malloc(sizeof(WaterMark_Template));
 	switch (i)
 	{
 	case 0:
-		return &data0;
+		TEMPLATE_SET_VALUE(data0)
 	case 1:
-		return &data1;
+		TEMPLATE_SET_VALUE(data1)
 	case 2:
-		return &data2;
+		TEMPLATE_SET_VALUE(data2)
 	case 3:
-		return &data3;
+		TEMPLATE_SET_VALUE(data3)
 	case 4:
-		return &data4;
+		TEMPLATE_SET_VALUE(data4)
 	case 5:
-		return &data5;
+		TEMPLATE_SET_VALUE(data5)
 	case 6:
-		return &data6;
+		TEMPLATE_SET_VALUE(data6)
 	case 7:
-		return &data7;
+		TEMPLATE_SET_VALUE(data7)
 	case 8:
-		return &data8;
+		TEMPLATE_SET_VALUE(data8)
 	case 9:
-		return &data9;
+		TEMPLATE_SET_VALUE(data9)
 	case 10:
-		return &data10;
+		TEMPLATE_SET_VALUE(data10)
 	case 11:
-		return &data11;
+		TEMPLATE_SET_VALUE(data11)
 	default:
-		return &data12;
+		TEMPLATE_SET_VALUE(data12)
 	}
+	return wm;
 }
 
 
@@ -52,14 +60,7 @@ int waterMark_init(WaterMark* waterMark)
 	int i;
 	for (i = 0; i < TEMPLATE_NUM; i++)
 	{
-		WaterMark_Template* wm = (WaterMark_Template*) malloc(sizeof(WaterMark_Template));
-		char* tm = get_template(i);
-		wm->width = tm[0];
-		wm->height = tm[1];
-		int len = wm->width * wm->height * 3 / 2;
-		wm->data = malloc(len);
-		memcpy(wm->data, &tm[2], len);
-		waterMark->templates[i] = wm;
+		waterMark->templates[i] = get_template(i);
 	}
 	return 1;
 }
@@ -129,7 +130,7 @@ static int addMark(unsigned char* target,unsigned int w,unsigned int h, int x, i
 				target[(w * (y + i) + x + j)] = o;
 				if(i % 2 ==0 &&  j%2 == 0 )
 				{
-					//设置uv
+					//璁剧疆uv
 //					printf("i:%d j:%d\n",i,j);
 					offset = uvoffset + w * i + j;
 					addMarkUV(target,offset);
