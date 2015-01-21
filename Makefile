@@ -16,8 +16,6 @@ CXXFLAGS =-Wall $(OPT) -DDEBUG
 
 SOURCES +=
 
-OBJS += 
-
 include src/Makefile
 include src/h264/Makefile
 include src/flv/lang/Makefile
@@ -27,6 +25,9 @@ include src/encoder/Makefile
 include src/camera/Makefile
 include src/live/Makefile
 include src/media/Makefile
+
+OBJS += $(patsubst %cpp,%o,$(filter %cpp ,$(SOURCES))) 
+OBJS +=$(patsubst %c,%o,$(filter %c ,$(SOURCES)))
 
 TARGET :=live
 
