@@ -5,10 +5,10 @@ CC=$(CROSS_COMPILE)gcc
 CXX=$(CROSS_COMPILE)g++
 
 
-LIBS=-ld
-LIBS_DIR=
+LIBS=-lrtmp -lpthread -lvencoder -lliveMedia -lBasicUsageEnvironment -lUsageEnvironment -lgroupsock -ldl
+LIBS_DIR= -Lsrc/librtmp -L./lib
 
-OPT=-O2
+OPT=-O2 -DSOCKLEN_T=socklen_t -DNO_SSTREAM=1 -D_LARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64
 
 CFLAGS =-Wall $(OPT) -DDEBUG
 CXXFLAGS =-Wall $(OPT) -DDEBUG
@@ -38,7 +38,7 @@ librtmp: FORCE
 	@cd ./src/librtmp; $(MAKE) all
 
 live: $(OBJS)
-	$(CXX)  -Lsrc/librtmp -L./lib -o $@ $(OBJS) -lrtmp -lpthread -lvencoder -ldl
+	$(CXX) $(LIBS_DIR)  -o $@ $(OBJS) $(LIBS)
 
 help:
 

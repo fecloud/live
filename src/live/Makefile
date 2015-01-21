@@ -1,3 +1,3 @@
-SOURCES +=src/live/LiveVideo.cpp src/live/H264MemReader.cpp
+SOURCES +=src/live/RTMPLiveVideo.cpp src/live/H264MemReader.cpp src/live/H264LiveVideoSource.cpp
 
-OBJS +=src/live/LiveVideo.o src/live/H264MemReader.o
+OBJS +=src/live/RTMPLiveVideo.o src/live/H264MemReader.o src/live/H264LiveVideoSource.o
