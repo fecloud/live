@@ -5,27 +5,28 @@
  *      Author: maygolf
  */
 
+#include "RTMPLiveVideo.h"
+
 #include "../utils.h"
 
-#include "LiveVideo.h"
 
 using namespace std;
 
-bool VideoLive::init()
+bool RTMPVideoLive::init()
 {
 	recorder->setDataCallBack(recorder, (void*) this, (void*) recevie_data);
 	output->open();
 	return true;
 }
 
-VideoLive::VideoLive(char* server, int width, int height)
+RTMPVideoLive::RTMPVideoLive(char* server, int width, int height)
 {
 	output = new RTMPOutPutStream(server, true, 30);
 	flvEncoder = new FLVEncoder(output);
 	recorder = create_video_recorder(width, height);
 }
 
-VideoLive::~VideoLive()
+RTMPVideoLive::~RTMPVideoLive()
 {
 	if (output)
 		delete output;
@@ -39,7 +40,7 @@ VideoLive::~VideoLive()
 
 int recevie_data(int type, void* cookie, void* data)
 {
-	VideoLive* live = (VideoLive*) cookie;
+	RTMPVideoLive* live = (RTMPVideoLive*) cookie;
 
 	if (type)
 	{
@@ -83,13 +84,13 @@ int recevie_data(int type, void* cookie, void* data)
 	return 1;
 }
 
-bool VideoLive::start()
+bool RTMPVideoLive::start()
 {
 	start_video_recorder(recorder);
 	return true;
 }
 
-bool VideoLive::stop()
+bool RTMPVideoLive::stop()
 {
 	output->close();
 	stop_video_recorder(recorder);

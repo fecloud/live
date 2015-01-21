@@ -11,8 +11,8 @@
 #include "io/FLVOutPutStream.h"
 #include "io/RTMPOutPutStream.h"
 #include "encoder/FLVEncoder.h"
+#include "live/RTMPLiveVideo.h"
 #include "utils.h"
-#include "live/LiveVideo.h"
 #include "media/videorecorder.h"
 
 char h264[] = "out.h264";
@@ -169,7 +169,7 @@ int main(int argc, char **argv)
 //	char* s = new char[100];
 //	delete[] s;
 //	}
-	 VideoLive live(outrtmp, 640, 480);
+	RTMPVideoLive live(outrtmp, 640, 480);
 	 live.init();
 	 live.start();
 	 live.stop();

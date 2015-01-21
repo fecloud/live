@@ -16,15 +16,15 @@
 #include "../io/RTMPOutPutStream.h"
 #include "H264MemReader.h"
 
-class VideoLive
+class RTMPVideoLive
 {
 
 public:
 	FLVOutPutStream* output;
 	FLVEncoder* flvEncoder;
 	Video_Recorder* recorder;
-	VideoLive(char*, int, int);
-	~VideoLive();
+	RTMPVideoLive(char*, int, int);
+	~RTMPVideoLive();
 	bool init();
 	bool start();
 	bool stop();
