@@ -4,8 +4,8 @@ prefix=/usr/local
 CC=$(CROSS_COMPILE)gcc
 CXX=$(CROSS_COMPILE)g++
 
-
-LIBS=-lrtmp -lpthread -lvencoder -lliveMedia -lBasicUsageEnvironment -lUsageEnvironment -lgroupsock -ldl
+#-lliveMedia -lBasicUsageEnvironment -lUsageEnvironment -lgroupsock
+LIBS=-lrtmp -lpthread -lvencoder -lrtsp -ldl
 LIBS_DIR= -Lsrc/librtmp -L./lib
 
 OPT=-O2 -DSOCKLEN_T=socklen_t -DNO_SSTREAM=1 -D_LARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64
