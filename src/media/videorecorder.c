@@ -5,14 +5,15 @@
  *      Author: maygolf
  */
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif /* __cplusplus */
 
- #include "videorecorder.h"
+#include "videorecorder.h"
 
-int setDataCallBack(struct Video_Recorder* p,void* cookie, void* callBack)
+int setDataCallBack(struct Video_Recorder* p, void* cookie, void* callBack)
 {
-	if(p)
+	if (p)
 	{
 		p->callback = callBack;
 		p->cookie = cookie;
@@ -21,18 +22,18 @@ int setDataCallBack(struct Video_Recorder* p,void* cookie, void* callBack)
 	return 0;
 }
 
- Video_Recorder* create_video_recorder(int width,int height)
- {
- 	Video_Recorder* context = NULL;
- 	context = (Video_Recorder*)malloc(sizeof(Video_Recorder));
- 	memset(context, 0 , sizeof(Video_Recorder));
- 	context->width = width;
- 	context->height = height;
+Video_Recorder* create_video_recorder(int width, int height)
+{
+	Video_Recorder* context = NULL;
+	context = (Video_Recorder*) malloc(sizeof(Video_Recorder));
+	memset(context, 0, sizeof(Video_Recorder));
+	context->width = width;
+	context->height = height;
 
- 	context->setDataCallBack = setDataCallBack;
- 	return context;
+	context->setDataCallBack = setDataCallBack;
+	return context;
 
- }
+}
 
 static int cameraSourceCallback(void *cookie, void *data)
 {
@@ -49,16 +50,16 @@ static int cameraSourceCallback(void *cookie, void *data)
 
 	void *buffer = (void *) p_v4l2_mem_map->mem[p_buf->index];
 	/* get input buffer*/
-	result = venc_device->ioctrl(venc_device,VENC_CMD_GET_ALLOCATE_INPUT_BUFFER, &input_buffer);
+	result = venc_device->ioctrl(venc_device, VENC_CMD_GET_ALLOCATE_INPUT_BUFFER, &input_buffer);
 	if (result == 0)
 	{
 		//printf("s:%lld\n",current_time());
-		YUV422To420((unsigned char*) buffer, input_buffer.addrvirY,recorder->width, recorder->height);
-		waterMarkShowTime(recorder->waterMark,input_buffer.addrvirY,recorder->width,recorder->height, 10, 10);
+		YUV422To420((unsigned char*) buffer, input_buffer.addrvirY, recorder->width, recorder->height);
+		waterMarkShowTime(recorder->waterMark, input_buffer.addrvirY, recorder->width, recorder->height, 10, 10);
 		//printf("e:%lld\n",current_time());
 		input_buffer.addrvirC = input_buffer.addrvirY + recorder->width * recorder->height;
-		venc_device->ioctrl(venc_device,VENC_CMD_FLUSHCACHE_ALLOCATE_INPUT_BUFFER, &input_buffer);
-		result = venc_device->ioctrl(venc_device, VENC_CMD_ENQUENE_INPUT_BUFFER,&input_buffer);
+		venc_device->ioctrl(venc_device, VENC_CMD_FLUSHCACHE_ALLOCATE_INPUT_BUFFER, &input_buffer);
+		result = venc_device->ioctrl(venc_device, VENC_CMD_ENQUENE_INPUT_BUFFER, &input_buffer);
 		if (result < 0)
 		{
 			usleep(1000);
@@ -95,12 +96,11 @@ static void* encoderThread(void* pThreadData)
 		}
 		//cout << "enquene input buffer not empty" << endl;
 
-
 //
 //		cedarx_cache_op(input_buffer.addrvirY,
 //						input_buffer.addrvirY + recorder->waterMark->bgInfo.width * recorder->waterMark->bgInfo.height * 3/2, 0);
 
-		result = venc_device->ioctrl(venc_device, VENC_CMD_ENCODE,&input_buffer);
+		result = venc_device->ioctrl(venc_device, VENC_CMD_ENCODE, &input_buffer);
 
 		// return the buffer to the alloc buffer quene after encoder
 		venc_device->ioctrl(venc_device, VENC_CMD_RETURN_ALLOCATE_INPUT_BUFFER, &input_buffer);
@@ -111,9 +111,9 @@ static void* encoderThread(void* pThreadData)
 			result = venc_device->ioctrl(venc_device, VENC_CMD_GET_BITSTREAM, &output_buffer);
 
 			//callback header
-			if(recorder->callback)
+			if (recorder->callback)
 			{
-				recorder->callback(1,recorder->cookie, &output_buffer);
+				recorder->callback(1, recorder->cookie, &output_buffer);
 			}
 
 			if (result == 0)
@@ -131,9 +131,9 @@ static void* encoderThread(void* pThreadData)
 
 }
 
- int start_video_recorder(Video_Recorder* recorder)
+int start_video_recorder(Video_Recorder* recorder)
 {
- 	// init base config param
+	// init base config param
 	recorder->base_cfg.codectype = VENC_CODEC_H264;
 
 	recorder->base_cfg.framerate = 25;
@@ -141,17 +141,16 @@ static void* encoderThread(void* pThreadData)
 	recorder->base_cfg.input_height = recorder->height;
 	recorder->base_cfg.dst_width = recorder->width;
 	recorder->base_cfg.dst_height = recorder->height;
-	recorder->base_cfg.maxKeyInterval = 25;
+	recorder->base_cfg.maxKeyInterval = 5;
 	recorder->base_cfg.inputformat = VENC_PIXEL_YUV420; //uv combined
 	recorder->base_cfg.targetbitrate = H264_TB;
 
 	// init allocate param
 	recorder->alloc_parm.buffernum = 4;
 
-
 	cedarx_hardware_init(0);
 	printf("%s\n", "cedarx_hardware_init");
-	printf("AWCodec version %s\n" , getCodecVision());
+	printf("AWCodec version %s\n", getCodecVision());
 
 	recorder->waterMark = malloc(sizeof(WaterMark));
 	memset(recorder->waterMark, 0x0, sizeof(WaterMark));
@@ -165,7 +164,7 @@ static void* encoderThread(void* pThreadData)
 	recorder->venc_device->ioctrl(recorder->venc_device, VENC_CMD_HEADER_DATA, &recorder->header_data);
 
 	//callback header
-	if(recorder->callback)
+	if (recorder->callback)
 	{
 		recorder->callback(0, recorder->cookie, &recorder->header_data);
 	}
@@ -173,7 +172,7 @@ static void* encoderThread(void* pThreadData)
 	recorder->cameraDevice = CreateCamera(recorder->width, recorder->height);
 	printf("%s\n", "create camera ok");
 
-	recorder->cameraDevice->setCameraDatacallback(recorder->cameraDevice, recorder,(void*) &cameraSourceCallback);
+	recorder->cameraDevice->setCameraDatacallback(recorder->cameraDevice, recorder, (void*) &cameraSourceCallback);
 
 	recorder->cameraDevice->startCamera(recorder->cameraDevice);
 
@@ -192,15 +191,26 @@ static void* encoderThread(void* pThreadData)
 	}
 
 	return 1;
- }
+}
 
- int stop_video_recorder(Video_Recorder* recorder)
- {
- 	if(!recorder)
- 		return 0;
+static void* recorder_newthread_worker(void* cookie)
+{
+	start_video_recorder((Video_Recorder*) cookie);
+	return (void*) 1;
+}
 
- 	recorder->mstart = 0;
- 	recorder->cameraDevice->stopCamera(recorder->cameraDevice);
+void start_video_recorder_newthread(Video_Recorder* recorder)
+{
+	pthread_create(&recorder->thread_recorder, NULL, recorder_newthread_worker, recorder);
+}
+
+int stop_video_recorder(Video_Recorder* recorder)
+{
+	if (!recorder)
+		return 0;
+
+	recorder->mstart = 0;
+	recorder->cameraDevice->stopCamera(recorder->cameraDevice);
 
 	DestroyCamera(recorder->cameraDevice);
 	recorder->cameraDevice = NULL;
@@ -216,7 +226,7 @@ static void* encoderThread(void* pThreadData)
 	cedarx_hardware_exit(0);
 
 	return 1;
- }
+}
 
 #ifdef __cplusplus
 }

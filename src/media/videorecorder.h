@@ -54,12 +54,15 @@ typedef struct Video_Recorder
 	void* cookie;
 	int (*setDataCallBack)(struct Video_Recorder*p, void* cookie, void* callBack);
 	WaterMark*	waterMark;
+	pthread_t thread_recorder;
 } Video_Recorder;
 
 
 Video_Recorder* create_video_recorder(int width,int height);
 
 int start_video_recorder(Video_Recorder*);
+
+void start_video_recorder_newthread(Video_Recorder*);
 
 int stop_video_recorder(Video_Recorder*);
 
