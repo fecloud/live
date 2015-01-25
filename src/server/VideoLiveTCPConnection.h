@@ -20,6 +20,9 @@ using namespace Poco::Net;
 class VideoLiveTCPConnection: public TCPServerConnection, public VideoLiveObserver
 {
 
+private :
+	 bool firstI;
+
 public:
 	VideoLiveTCPConnection(const StreamSocket& s);
 	virtual ~VideoLiveTCPConnection()
