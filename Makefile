@@ -4,11 +4,13 @@ prefix=/usr/local
 CC=$(CROSS_COMPILE)gcc
 CXX=$(CROSS_COMPILE)g++
 
+INC=-Isrc
+
 #-lliveMedia -lBasicUsageEnvironment -lUsageEnvironment -lgroupsock
-LIBS=-lrtmp -lpthread -lvencoder -lrtsp -ldl
+LIBS=-lrtmp -lpthread -lvencoder -lliveMedia -lrt -lPocoXML -lPocoJSON -lPocoUtil -lPocoNet -lPocoFoundation -lgroupsock -lUsageEnvironment -lBasicUsageEnvironment -ldl
 LIBS_DIR= -Lsrc/librtmp -L./lib
 
-OPT=-O2 -DSOCKLEN_T=socklen_t -DNO_SSTREAM=1 -D_LARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64
+OPT=-O2 $(INC) -DSOCKLEN_T=socklen_t -DNO_SSTREAM=1 -D_LARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64
 
 CFLAGS =-Wall $(OPT) -DDEBUG
 CXXFLAGS =-Wall $(OPT) -DDEBUG
@@ -25,6 +27,7 @@ include src/encoder/Makefile
 include src/camera/Makefile
 include src/live/Makefile
 include src/media/Makefile
+include src/server/Makefile
 
 OBJS += $(patsubst %cpp,%o,$(filter %cpp ,$(SOURCES))) 
 OBJS +=$(patsubst %c,%o,$(filter %c ,$(SOURCES)))
