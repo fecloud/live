@@ -36,6 +36,7 @@ void VideoLiveObserver::cpyVencSeqHeader(VencSeqHeader* head)
 	seqhead.bufptr = (unsigned char*) malloc(head->length);
 	seqhead.bufsize = head->bufsize;
 	seqhead.length = head->length;
+	memcpy(seqhead.bufptr,head->bufptr,head->length);
 }
 
 void VideoLiveObserver::cpyVencOutputBuffer(VencOutputBuffer* output)

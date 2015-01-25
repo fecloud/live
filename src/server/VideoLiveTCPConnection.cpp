@@ -19,9 +19,8 @@ using namespace Poco::Util;
 using namespace Poco::Net;
 
 VideoLiveTCPConnection::VideoLiveTCPConnection(const StreamSocket& s) :
-		TCPServerConnection(s)
+		TCPServerConnection(s), firstI(false)
 {
-
 }
 
 void VideoLiveTCPConnection::doWork()
@@ -33,19 +32,34 @@ void VideoLiveTCPConnection::doWork()
 
 		if (buffer.id > 0)
 		{
-			//send
-			if (socket().sendBytes(buffer.ptr0, buffer.size0))
+			if (!firstI && (buffer.ptr0[4] & 0x1F) != 5)
 			{
-				if (buffer.size1 > 0)
-				{
-					if (!socket().sendBytes(buffer.ptr1, buffer.size1))
-					{
-						break;
-					}
-				}
-				resetVencOutputBuffer();
+				pthread_mutex_unlock(&mt);
+				continue;
 			}
 			else
+			{
+				firstI = true;
+			}
+			try
+			{
+				//send
+				if (socket().sendBytes(buffer.ptr0, buffer.size0))
+				{
+					if (buffer.size1 > 0)
+					{
+						if (!socket().sendBytes(buffer.ptr1, buffer.size1))
+						{
+							break;
+						}
+					}
+					resetVencOutputBuffer();
+				}
+				else
+				{
+					break;
+				}
+			} catch (Poco::Exception& e)
 			{
 				break;
 			}
@@ -64,11 +78,12 @@ void VideoLiveTCPConnection::doWork()
 void VideoLiveTCPConnection::run()
 {
 	Application& app = Application::instance();
+	VideoLiveObservable* instance = VideoLiveObservable::createNew();
 	// 日志输出连接的TCP用户的地址（IP和端口）
 	//app.logger().information("Request from " + this->socket().peerAddress().toString());
 	try
 	{
-		VideoLiveObservable* instance = VideoLiveObservable::createNew();
+
 		cpyVencSeqHeader(instance->registerVideoLiveObserver(this));
 		if (this->seqhead.length > 0)
 		{
@@ -81,9 +96,11 @@ void VideoLiveTCPConnection::run()
 		}
 		instance->unRegisterVideoLiveObserver(this);
 		socket().shutdown();
+		socket().close();
 
 	} catch (Poco::Exception& e)
 	{
+		instance->unRegisterVideoLiveObserver(this);
 		app.logger().log(e);
 	}
 }

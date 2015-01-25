@@ -94,6 +94,7 @@ void VideoLiveObservable::cpyVencSeqHeader(VencSeqHeader* head)
 	this->seqhead.bufptr = (unsigned char*) malloc(head->length);
 	this->seqhead.bufsize = head->bufsize;
 	this->seqhead.length = head->length;
+	memcpy(seqhead.bufptr,head->bufptr,head->length);
 }
 
 void VideoLiveObservable::notification(VencOutputBuffer* output)
