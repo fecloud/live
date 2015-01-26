@@ -26,12 +26,14 @@ class H264Reader:public MediaInputStream
 {
 
 private:
+	char* filename;
 	ifstream file;
 	H264NALU* byte;
 	Bytes* buffer;
 	bool findNALU();
 
 public:
+	H264Reader();
 	H264Reader(char* file);
 	virtual ~H264Reader();
 	virtual bool close();

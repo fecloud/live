@@ -102,7 +102,7 @@ void VideoLiveObservable::notification(VencOutputBuffer* output)
 	pthread_mutex_lock(&mt);
 	if (obables.size() > 0)
 	{
-		time_t t = time(NULL);
+		//time_t t = time(NULL);
 		//cout << t << "found " << obables.size() << " VideoLiveObserver" << endl;
 		list<VideoLiveObserver*>::iterator it;
 		for (it = obables.begin(); it != obables.end(); ++it)

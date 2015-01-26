@@ -9,18 +9,18 @@
 
 using namespace std;
 
-H264Reader::H264Reader(char* file)
+H264Reader::H264Reader()
 {
-	cout << "file:" << file << endl;
+	filename = 0;
 	byte = new H264NALU(512000);
 	buffer = new Bytes(READ_BUFFER);
-	this->file.open(file, ifstream::in | ifstream::binary);
-	int i = 0;
-	for (; i < 4; i++)
-	{
-		this->file.get();
-		//std::cout << "H264Reader:" << this->file.tellg() << std::endl;
-	}
+}
+
+H264Reader::H264Reader(char* file)
+{
+	filename = new char[strlen(file) + 1];
+	byte = new H264NALU(512000);
+	buffer = new Bytes(READ_BUFFER);
 }
 
 H264Reader::~H264Reader()
@@ -29,7 +29,10 @@ H264Reader::~H264Reader()
 	byte = NULL;
 	delete buffer;
 	buffer = NULL;
-	cout << "~H264Reader" << endl;
+	if (file)
+	{
+		delete[] filename;
+	}
 	if (file.is_open())
 	{
 		close();
@@ -38,6 +41,12 @@ H264Reader::~H264Reader()
 
 bool H264Reader::open()
 {
+	this->file.open(filename, ifstream::in | ifstream::binary);
+	int i = 0;
+	for (; i < 4; i++)
+	{
+		this->file.get();
+	}
 	return file.is_open();
 }
 
@@ -53,15 +62,12 @@ bool H264Reader::findNALU()
 		if (c == 0x1)
 		{
 			int postion = byte->postion();
-			if (byte->getLength() > 3 && byte->getData()[postion - 4] == 0
-					&& byte->getData()[postion - 3] == 0
-					&& byte->getData()[postion - 2] == 0)
+			if (byte->getLength() > 3 && byte->getData()[postion - 4] == 0 && byte->getData()[postion - 3] == 0 && byte->getData()[postion - 2] == 0)
 			{
 				byte->setLength(postion - 4);
 				return true;
 			}
-			else if (byte->getLength() > 3 && byte->getData()[postion - 3] == 0
-					&& byte->getData()[postion - 2] == 0)
+			else if (byte->getLength() > 3 && byte->getData()[postion - 3] == 0 && byte->getData()[postion - 2] == 0)
 			{
 				byte->setLength(postion - 3);
 				return true;

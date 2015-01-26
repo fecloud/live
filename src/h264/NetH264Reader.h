@@ -15,20 +15,20 @@
 #include "Poco/Net/SocketStream.h"
 #include "Poco/StreamCopier.h"
 
-//#include "H264Reader.h"
+#include "H264Reader.h"
 
 using namespace Poco::Net;
 
-class NetH264Reader
+class NetH264Reader: public H264Reader
 {
 
-private:
-	char* host;
-	unsigned int port;
-	SocketStream input;
+public:
+	SocketAddress address;
+	StreamSocket socket;
+	SocketStream* stream;
 
 public:
-	NetH264Reader(char* host, unsigned int port);
+	NetH264Reader(char*, unsigned short);
 	virtual ~NetH264Reader();
 	virtual bool close();
 	virtual bool open();
