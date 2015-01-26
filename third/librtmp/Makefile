@@ -81,7 +81,7 @@ LDFLAGS=$(XLDFLAGS) -L/usr/local/ssl/lib
 
 OBJS=rtmp.o log.o amf.o hashswf.o parseurl.o
 
-all:	librtmp.a 
+all:	librtmp.a  librtmp$(SO_EXT)
 #$(SO_LIB)
 
 clean:

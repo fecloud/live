@@ -4,11 +4,11 @@ prefix=/usr/local
 CC=$(CROSS_COMPILE)gcc
 CXX=$(CROSS_COMPILE)g++
 
-INC=-Isrc
+INC=-Ithird
 
 #-lliveMedia -lBasicUsageEnvironment -lUsageEnvironment -lgroupsock
 LIBS=-lrtmp -lpthread -lvencoder -lliveMedia -lrt -lPocoXML -lPocoJSON -lPocoUtil -lPocoNet -lPocoFoundation -lgroupsock -lUsageEnvironment -lBasicUsageEnvironment -ldl
-LIBS_DIR= -Lsrc/librtmp -L./lib
+LIBS_DIR=-L./lib
 
 OPT=-O2 $(INC) -DSOCKLEN_T=socklen_t -DNO_SSTREAM=1 -D_LARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64
 
@@ -32,23 +32,22 @@ include src/server/Makefile
 OBJS += $(patsubst %cpp,%o,$(filter %cpp ,$(SOURCES))) 
 OBJS +=$(patsubst %c,%o,$(filter %c ,$(SOURCES)))
 
+VLSERVER_MAIN_OBJ = $(patsubst %cpp,%o,$(VLSERVER_MAIN))
+
 TARGET :=live
 
-all: librtmp live
-
-FORCE:
-
-librtmp: FORCE
-	@cd ./src/librtmp; $(MAKE) all
+all:  vlserver
 
 live: $(OBJS)
 	$(CXX) $(LIBS_DIR)  -o $@ $(OBJS) $(LIBS)
 
+vlserver: $(VLSERVER_MAIN_OBJ) $(OBJS)
+	$(CXX) $(LIBS_DIR)  -o $@ $(VLSERVER_MAIN_OBJ) $(OBJS)  $(LIBS)
+
 help:
 
 clean:
-	@cd ./src/librtmp; $(MAKE) clean
-	rm -rf $(OBJS) $(TARGET)
+	rm -rf $(OBJS) vlserver
 	
 %.o:%.c
 	$(CC) $(CFLAGS) -c  $< -o $@ 

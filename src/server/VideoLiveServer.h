@@ -8,8 +8,8 @@
 #ifndef SRC_SERVER_VIDEOLIVESERVER_H_
 #define SRC_SERVER_VIDEOLIVESERVER_H_
 
-#include "../Poco/Util/ServerApplication.h"
-#include "../Poco/Util/Application.h"
+#include "Poco/Util/ServerApplication.h"
+#include "Poco/Util/Application.h"
 
 using Poco::Util::ServerApplication;
 using Poco::Util::Application;

@@ -37,7 +37,7 @@ int VideoLiveServer::main(const std::vector<std::string>& args)
 	ServerSocket serverSocket(8090);
 
 	TCPServerParams::Ptr param = new TCPServerParams();
-	param->setMaxThreads(1);
+	param->setMaxThreads(3);
 
 	// 2. Pass the ServerSocket to a TCPServer
 	TCPServer server(new VideoLiveTCPConnectionFactory(), serverSocket,param);

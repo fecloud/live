@@ -7,8 +7,8 @@
 #ifndef H264_LIVEVIDEOSOURCE_H
 #define H264_LIVEVIDEOSOURCE_H
 
-#include "../live555/UsageEnvironment/UsageEnvironment.hh"
-#include "../live555/liveMedia/FramedSource.hh"
+#include "live555/UsageEnvironment/UsageEnvironment.hh"
+#include "live555/liveMedia/FramedSource.hh"
 
 class H264LiveVideoSource: public FramedSource
 {
@@ -47,7 +47,7 @@ private:
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-#include "../live555/liveMedia/H264VideoFileServerMediaSubsession.hh"
+#include "live555/liveMedia/H264VideoFileServerMediaSubsession.hh"
 
 class H264LiveVideoServerMediaSubsession: public OnDemandServerMediaSubsession
 {

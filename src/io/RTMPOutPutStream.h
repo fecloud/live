@@ -11,8 +11,8 @@
 #include <unistd.h>
 #include <time.h>
 
-#include "../librtmp/rtmp_sys.h"
-#include "../librtmp/log.h"
+#include "librtmp/rtmp_sys.h"
+#include "librtmp/log.h"
 
 #include "FLVOutPutStream.h"
 #include "../flv/lang/String.h"
