@@ -1,4 +1,3 @@
-#define LOG_NDEBUG 0
 #define LOG_TAG "Camera"
 //#include <cutils/log.h>
 #include "../vencoder/CDX_Debug.h"

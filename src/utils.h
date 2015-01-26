@@ -8,12 +8,29 @@
 #ifndef UTILS_H_
 #define UTILS_H_
 
+#ifndef LOG_NDEBUG
+#define LOG_NDEBUG 0
+#endif
+
+#ifdef __cplusplus
+
+#if LOG_NDEBUG
+#define CPPLOG(_STR_)   ((void)0)
+#else
+#define CPPLOG(_STR_) std::cout <<  __LINE__ << " " << _STR_ << std::endl
+#endif
+
+#endif/* __cplusplus */
+
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
 
+
 #include <time.h>
 #include <sys/time.h>
+
+
 
 //extern "C" {
 //	int gettimeofday(struct timeval *tv, struct timezone *tz);

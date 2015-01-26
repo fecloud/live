@@ -179,23 +179,22 @@
 //	return 0;
 //}
 //
-#include "h264/NetH264Reader.h"
-
-#include <iostream>
-
-int main(int argc, char **argv)
-{
-
-	NetH264Reader read(argv, 80);
-	if (read.open())
-	{
-		*read.stream << "GET / HTTP/1.1\r\n"
-				"Host: t1.baidu.com\r\n"
-				"\r\n";
-		read.stream->flush();
-		Poco::StreamCopier::copyStream(*read.stream, std::cout);
-	}
-	return 0;
-
-}
+//#include "h264/NetH264Reader.h"
+//
+//#include <iostream>
+//
+//int main(int argc, char **argv)
+//{
+//
+//	NetH264Reader read("localhost", 8090);
+//	if (read.open())
+//	{
+//		while(1)
+//		{
+//			read.reader();
+//		}
+//	}
+//	return 0;
+//
+//}
 

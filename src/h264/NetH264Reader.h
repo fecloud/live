@@ -17,22 +17,24 @@
 
 #include "H264Reader.h"
 
+#include <stdio.h>
+
 using namespace Poco::Net;
 
 class NetH264Reader: public H264Reader
 {
 
-public:
+private:
 	SocketAddress address;
 	StreamSocket socket;
-	SocketStream* stream;
+	FILE * fp;
 
 public:
 	NetH264Reader(char*, unsigned short);
 	virtual ~NetH264Reader();
 	virtual bool close();
 	virtual bool open();
-//	virtual Bytes* reader();
+	virtual Bytes* reader();
 };
 
 #endif /* CLIENT_NETH264READER_H_ */

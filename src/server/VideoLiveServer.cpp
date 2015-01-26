@@ -29,12 +29,11 @@ VideoLiveServer::~VideoLiveServer()
 
 int VideoLiveServer::main(const std::vector<std::string>& args)
 {
-	std::cout << "VideLiveServer::main" << std::endl;
-//	unsigned short port = (unsigned short) config().getInt("PoechantTCPServer.port", 12346);
-//	std::string format(config().getString("PoechantTCPServer.format", DateTimeFormat::ISO8601_FORMAT));
-
+	CPPLOG("VideLiveServer::main");
+	std::string port = *(++args.begin());
+	std::cout << port << std::endl;
 	// 1. Bind a ServerSocket with an address
-	ServerSocket serverSocket(8090);
+	ServerSocket serverSocket(atoi(port.c_str()));
 
 	TCPServerParams::Ptr param = new TCPServerParams();
 	param->setMaxThreads(3);
