@@ -40,7 +40,7 @@ live: $(OBJS)
 	$(CXX) $(LIBS_DIR)  -o $@ $(OBJS) $(LIBS)
 
 vlserver: $(VLSERVER_MAIN_OBJ) $(OBJS)
-	$(CXX) $(LIBS_DIR)  -o $@ $(VLSERVER_MAIN_OBJ) $(base_module) $(carmer_module) $(media_module) $(server_module) -lpthread -lvencoder -lPocoXML -lPocoJSON -lPocoUtil -lPocoNet -lPocoFoundation
+	$(CXX) $(LIBS_DIR)  -o $@ $(VLSERVER_MAIN_OBJ) $(base_module) $(carmer_module) $(media_module) $(server_module) -lpthread -lvencoder -lPocoXML -lPocoJSON -lPocoUtil -lPocoNet -lPocoFoundation -ldl -lrt
 
 help:
 

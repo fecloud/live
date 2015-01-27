@@ -36,7 +36,7 @@ bool VideoLiveTCPConnection::sendData(const void* buffer, int length)
 		lens[1] = (length & 0xFFFFFF) >> 16;
 		lens[2] = (length & 0xFFFF) >> 8;
 		lens[3] = length;
-		if (/*socket().sendBytes(lens, 4) &&*/socket().sendBytes(buffer, length))
+		if (socket().sendBytes(lens, 4) &&socket().sendBytes(buffer, length))
 		{
 			re = true;
 		}
