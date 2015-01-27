@@ -44,6 +44,10 @@ vlserver: $(VLSERVER_MAIN_OBJ) $(OBJS)
 
 help:
 
+install:
+	mkdir -p $(prefix)
+	cp vlserver $(prefix)/vlserver
+
 clean:
 	rm -rf $(OBJS) vlserver
 	
