@@ -4,8 +4,12 @@
  *  Created on: Jan 24, 2015
  *      Author: ouyangfeng
  */
+#include <iostream>
 
 #include "VideoLiveObserver.h"
+#include "../utils.h"
+
+using namespace std;
 
 VideoLiveObserver::VideoLiveObserver()
 {
@@ -36,7 +40,7 @@ void VideoLiveObserver::cpyVencSeqHeader(VencSeqHeader* head)
 	seqhead.bufptr = (unsigned char*) malloc(head->length);
 	seqhead.bufsize = head->bufsize;
 	seqhead.length = head->length;
-	memcpy(seqhead.bufptr,head->bufptr,head->length);
+	memcpy(seqhead.bufptr, head->bufptr, head->length);
 }
 
 void VideoLiveObserver::cpyVencOutputBuffer(VencOutputBuffer* output)
@@ -79,7 +83,7 @@ void VideoLiveObserver::resetVencOutputBuffer()
 
 void VideoLiveObserver::update(VencOutputBuffer* output)
 {
-	pthread_mutex_lock(&mt);
+	pthread_mutex_unlock(&mt);
 	cpyVencOutputBuffer(output);
 	pthread_cond_signal(&ct);
 	pthread_mutex_unlock(&mt);

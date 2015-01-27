@@ -30,6 +30,7 @@ public:
 	}
 	void run();
 	void doWork();
+	bool sendData(const void* buffer, int length);
 
 };
 

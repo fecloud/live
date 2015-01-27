@@ -29,6 +29,7 @@ extern "C" {
 
 #include "water_mark.h"
 #include "../utils.h"
+#include "../log.h"
 
 //h264编码码率
 #ifndef H264_TB

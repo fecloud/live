@@ -123,7 +123,7 @@ static void* encoderThread(void* pThreadData)
 		}
 		else
 		{
-			printf("encoder fatal error\n");
+			CLOG("encoder fatal error");
 		}
 	}
 
@@ -149,8 +149,8 @@ int start_video_recorder(Video_Recorder* recorder)
 	recorder->alloc_parm.buffernum = 4;
 
 	cedarx_hardware_init(0);
-	printf("%s\n", "cedarx_hardware_init");
-	printf("AWCodec version %s\n", getCodecVision());
+	CLOG("%s", "cedarx_hardware_init");
+	CLOG("AWCodec version %s", getCodecVision());
 
 	recorder->waterMark = malloc(sizeof(WaterMark));
 	memset(recorder->waterMark, 0x0, sizeof(WaterMark));
@@ -170,7 +170,7 @@ int start_video_recorder(Video_Recorder* recorder)
 	}
 
 	recorder->cameraDevice = CreateCamera(recorder->width, recorder->height);
-	printf("%s\n", "create camera ok");
+	CLOG("%s", "create camera ok");
 
 	recorder->cameraDevice->setCameraDatacallback(recorder->cameraDevice, recorder, (void*) &cameraSourceCallback);
 
@@ -182,7 +182,7 @@ int start_video_recorder(Video_Recorder* recorder)
 	int err = pthread_create(&recorder->thread_enc_id, NULL, encoderThread, recorder);
 	if (err || !recorder->thread_enc_id)
 	{
-		printf("%s\n", "Create thread_enc_id fail !");
+		CLOG("%s", "Create thread_enc_id fail !");
 	}
 	else
 	{

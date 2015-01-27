@@ -1,3 +1,6 @@
-SOURCES +=src/server/VideoLiveObservable.cpp src/server/VideoLiveObserver.cpp src/server/VideoLiveServer.cpp src/server/VideoLiveTCPConnection.cpp
+server_src +=src/server/VideoLiveObservable.cpp src/server/VideoLiveObserver.cpp src/server/VideoLiveServer.cpp src/server/VideoLiveTCPConnection.cpp src/server/vlserver.cpp
+ 
+SOURCES+=$(server_src)
 
-VLSERVER_MAIN=src/server/vlserver.cpp
+server_module += $(patsubst %cpp,%o,$(filter %cpp ,$(server_src))) 
+server_module += $(patsubst %c,%o,$(filter %c ,$(server_src)))

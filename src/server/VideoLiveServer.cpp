@@ -14,6 +14,7 @@
 #include "VideoLiveServer.h"
 #include "VideoLiveTCPConnectionFactory.h"
 
+using namespace std;
 using namespace Poco;
 using namespace Poco::Net;
 
@@ -29,9 +30,8 @@ VideoLiveServer::~VideoLiveServer()
 
 int VideoLiveServer::main(const std::vector<std::string>& args)
 {
-	CPPLOG("VideLiveServer::main");
 	std::string port = *(++args.begin());
-	std::cout << port << std::endl;
+	cout << "VideoLiveServer runing port " << port << endl;
 	// 1. Bind a ServerSocket with an address
 	ServerSocket serverSocket(atoi(port.c_str()));
 

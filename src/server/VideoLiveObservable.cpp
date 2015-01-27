@@ -7,6 +7,7 @@
 #include <iostream>
 
 #include "VideoLiveObservable.h"
+#include "../utils.h"
 
 using namespace std;
 
@@ -63,7 +64,7 @@ void VideoLiveObservable::destory(VideoLiveObservable* instance)
 
 VencSeqHeader* VideoLiveObservable::registerVideoLiveObserver(VideoLiveObserver* observer)
 {
-	cout << "registerVideoLiveObserver" << endl;
+	CPPLOG("registerVideoLiveObserver");
 	if (seqhead.length > 0)
 	{
 		if (observer)
@@ -72,7 +73,7 @@ VencSeqHeader* VideoLiveObservable::registerVideoLiveObserver(VideoLiveObserver*
 			obables.push_back(observer);
 			pthread_mutex_unlock(&mt);
 		}
-		cout << "registerVideoLiveObserver end" << endl;
+		CPPLOG("registerVideoLiveObserver end");
 		return &seqhead;
 	}
 	return NULL;
@@ -80,7 +81,7 @@ VencSeqHeader* VideoLiveObservable::registerVideoLiveObserver(VideoLiveObserver*
 
 void VideoLiveObservable::unRegisterVideoLiveObserver(VideoLiveObserver* observer)
 {
-	cout << "unRegisterVideoLiveObserver" << endl;
+	CPPLOG("unRegisterVideoLiveObserver");
 	pthread_mutex_lock(&mt);
 	if (observer)
 	{
@@ -94,22 +95,22 @@ void VideoLiveObservable::cpyVencSeqHeader(VencSeqHeader* head)
 	this->seqhead.bufptr = (unsigned char*) malloc(head->length);
 	this->seqhead.bufsize = head->bufsize;
 	this->seqhead.length = head->length;
-	memcpy(seqhead.bufptr,head->bufptr,head->length);
+	memcpy(seqhead.bufptr, head->bufptr, head->length);
 }
 
 void VideoLiveObservable::notification(VencOutputBuffer* output)
 {
-	pthread_mutex_lock(&mt);
-	if (obables.size() > 0)
+	if (pthread_mutex_trylock(&mt) == 0)
 	{
-		//time_t t = time(NULL);
-		//cout << t << "found " << obables.size() << " VideoLiveObserver" << endl;
-		list<VideoLiveObserver*>::iterator it;
-		for (it = obables.begin(); it != obables.end(); ++it)
+		if (obables.size() > 0)
 		{
-			((VideoLiveObserver*) *it)->update(output);
+			list<VideoLiveObserver*>::iterator it;
+			for (it = obables.begin(); it != obables.end(); ++it)
+			{
+				((VideoLiveObserver*) *it)->update(output);
+			}
 		}
+		pthread_mutex_unlock(&mt);
 	}
-	pthread_mutex_unlock(&mt);
 }
 
