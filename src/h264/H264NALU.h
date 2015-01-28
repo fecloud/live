@@ -35,7 +35,7 @@
 
 #define FILL 0x12
 
-#include "../Bytes.h"
+#include "../base/Bytes.h"
 
 class H264NALU: public Bytes
 {
@@ -47,7 +47,7 @@ public:
 	H264NALU();
 	H264NALU(int);
 	H264NALU(char*data, int length) :
-			Bytes(data, length)
+			Bytes(data, length), type(0)
 	{
 	}
 	virtual ~H264NALU();

@@ -14,7 +14,7 @@
 #include <cstring>
 #include <string.h>
 
-#include "../utils.h"
+#include "../base/utils.h"
 #include "H264NALU.h"
 #include "../io/MediaInputStream.h"
 
@@ -22,10 +22,10 @@
 
 using namespace std;
 
-class H264Reader:public MediaInputStream
+class H264Reader: public MediaInputStream
 {
 
-private:
+protected:
 	char* filename;
 	ifstream file;
 	H264NALU* byte;
@@ -37,7 +37,7 @@ public:
 	H264Reader(char* file);
 	virtual ~H264Reader();
 	virtual bool close();
-	H264NALU* readH264();
+	virtual H264NALU* readH264();
 	virtual bool open();
 	virtual Bytes* reader();
 

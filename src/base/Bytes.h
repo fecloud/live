@@ -32,6 +32,7 @@ public:
 	int getChar();
 	int getInt();
 	double getDouble();
+	long long getLong();
 	int postion();
 	void postion(int);
 	bool hasRemaining();
@@ -42,7 +43,9 @@ public:
 	void putChar(int);
 	void putInt(int);
 	void putDouble(double);
+	void putLong(long long);
 	void flip();
+	int getCapacity();
 };
 
 #endif /* BYTE_H_ */

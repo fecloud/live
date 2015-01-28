@@ -19,6 +19,7 @@ H264Reader::H264Reader()
 H264Reader::H264Reader(char* file)
 {
 	filename = new char[strlen(file) + 1];
+	strcpy(filename,file);
 	byte = new H264NALU(512000);
 	buffer = new Bytes(READ_BUFFER);
 }
@@ -90,12 +91,8 @@ H264NALU* H264Reader::readH264()
 		if (!buffer->hasRemaining())
 		{
 			buffer->clear();
-//			memset((void*) buffer->getData(), 0, READ_BUFFER);
 			file.read(buffer->getData(), READ_BUFFER);
 			int count = file.gcount();
-//			counts ++ ;
-//			cout << "count" << count << endl;
-//			cout << "counts" << counts << endl;
 			if (count > 0)
 			{
 				buffer->setLength(count);
@@ -107,10 +104,6 @@ H264NALU* H264Reader::readH264()
 				break;
 			}
 		}
-//		while (buffer->hasRemaining())
-//		{
-//			buffer->get();
-//		}
 		if (findNALU())
 		{
 			break;

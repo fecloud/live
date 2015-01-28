@@ -60,6 +60,14 @@ bool VideoLiveTCPConnection::hand()
 	return false;
 }
 
+bool VideoLiveTCPConnection::sendHeader()
+{
+	unsigned char *start = seqhead.bufptr;
+	return sendData(start, 13) && sendData(start + 13, seqhead.length - 13);
+
+	return false;
+}
+
 bool VideoLiveTCPConnection::sendData(const void* buffer, int length)
 {
 	bool re = false;
@@ -170,7 +178,7 @@ void VideoLiveTCPConnection::run()
 			cpyVencSeqHeader(instance->registerVideoLiveObserver(this));
 			if (this->seqhead.length > 0)
 			{
-				if (sendData(this->seqhead.bufptr, this->seqhead.length))
+				if (sendHeader())
 				{
 					doWork();
 				}

@@ -12,9 +12,9 @@
 #include <stdio.h>
 
 #include "../flv/amf.h"
-#include "../io/MediaInputStream.h"
 #include "../io/MediaOutputStream.h"
 #include "../h264/H264NALU.h"
+#include "../h264/H264Reader.h"
 #include "../flv/lang/Struct.h"
 #include "SpsDecode.h"
 
@@ -25,8 +25,9 @@ using namespace std;
 #define  AVC_END 0x2
 
 class FLVEncoder {
+
 private:
-	MediaInputStream* in;
+	H264Reader* in;
 	MediaOutputStream* out;
 	H264NALU* sps;
 	H264NALU* pps;
@@ -48,7 +49,7 @@ protected:
 public:
 	FLVEncoder();
 	FLVEncoder(MediaOutputStream* out);
-	FLVEncoder(MediaInputStream* in, MediaOutputStream* out);
+	FLVEncoder(H264Reader* in, MediaOutputStream* out);
 	virtual ~FLVEncoder();
 	void encoder();
 	/**

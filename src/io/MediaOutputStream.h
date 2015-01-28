@@ -8,7 +8,7 @@
 #ifndef MEDIAOUTPUTSTREAM_H_
 #define MEDIAOUTPUTSTREAM_H_
 
-#include "../Bytes.h"
+#include "../base/Bytes.h"
 
 class MediaOutputStream
 {

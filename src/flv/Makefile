@@ -1,4 +1,7 @@
-SOURCES +=src/flv/FLVTag.cpp src/flv/FLVScriptTagBody.cpp src/flv/FLVTagHeader.cpp src/flv/FLVVideoTagBody.cpp src/flv/FLVReader.cpp \
+flv_src += src/flv/FLVTag.cpp src/flv/FLVScriptTagBody.cpp src/flv/FLVTagHeader.cpp src/flv/FLVVideoTagBody.cpp src/flv/FLVReader.cpp \
 	
-#OBJS +=src/flv/FLVTag.o src/flv/FLVScriptTagBody.o  src/flv/FLVTagHeader.o src/flv/FLVVideoTagBody.o src/flv/FLVReader.o \
+SOURCES += $(flv_src)
+
+flv_module += $(patsubst %cpp,%o,$(filter %cpp ,$(flv_src))) 
+flv_module += $(patsubst %c,%o,$(filter %c ,$(flv_src)))
 	

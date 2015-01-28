@@ -1,12 +1,13 @@
-///*
-// * main.cpp
-// *
-// *  Created on: 2014-12-18
-// *      Author: maygolf
-// */
+/////*
+//// * main.cpp
+//// *
+//// *  Created on: 2014-12-18
+//// *      Author: maygolf
+//// */
 //#include <time.h>
 //
 //#include "h264/H264Reader.h"
+//#include "h264/NetH264Reader.h"
 //#include "flv/FLVReader.h"
 //#include "io/FLVOutPutStream.h"
 //#include "io/RTMPOutPutStream.h"
@@ -15,17 +16,17 @@
 //#include "utils.h"
 //#include "media/videorecorder.h"
 //
-//char h264[] = "out.h264";
+//char h264[] = "test.264";
 //char parflv[] = "test.flv";
 //char outflv[] = "test1.flv";
 //char outrtmp[] = "rtmp://127.0.0.1/live/demo";
-//uint64_t flv_dbl2int(double value)
-//{
-//	return (union
-//			{	double f; uint64_t i;})
-//	{	value}.i;
-//}
-//
+////uint64_t flv_dbl2int(double value)
+////{
+////	return (union
+////			{	double f; uint64_t i;})
+////	{	value}.i;
+////}
+////
 //void testFLVData()
 //{
 //	cout << "encoderOnMetaData" << endl;
@@ -119,36 +120,51 @@
 //	output = NULL;
 //}
 //
+//void testNetH264ToRTMP()
+//{
+//	cout << "testNetH264ToRTMP" << endl;
+//	NetH264Reader* reader = new NetH264Reader("localhost",8090);
+//
+//	RTMPOutPutStream* output = new RTMPOutPutStream(outrtmp, false, 25);
+//	FLVEncoder encoder(reader, output);
+//	encoder.encoder();
+//	delete reader;
+//	reader = NULL;
+//	delete output;
+//	output = NULL;
+//}
+//
 //FILE *outfile;
 //
-//void cdear(int type,void* cookie,void* data)
-//{
-//	if(type)
-//	{
-//		VencSeqHeader* header = (VencSeqHeader*)data;
-//		fwrite(header->bufptr,header->length,1,outfile);
-//	}else
-//	{
-//		VencOutputBuffer* out = (VencOutputBuffer*)data;
-//		fwrite(out->ptr0,out->size0,1,outfile);
-//		if(out->size1)
-//		{
-//			fwrite(out->ptr1,out->size1,1,outfile);
-//		}
-//	}
-//	time_t t = time(NULL);
-//	cout <<  t << " cdear type:" << type << endl;
-//}
+////void cdear(int type, void* cookie, void* data)
+////{
+////	if (type)
+////	{
+////		VencSeqHeader* header = (VencSeqHeader*) data;
+////		fwrite(header->bufptr, header->length, 1, outfile);
+////	}
+////	else
+////	{
+////		VencOutputBuffer* out = (VencOutputBuffer*) data;
+////		fwrite(out->ptr0, out->size0, 1, outfile);
+////		if (out->size1)
+////		{
+////			fwrite(out->ptr1, out->size1, 1, outfile);
+////		}
+////	}
+////	time_t t = time(NULL);
+////	cout << t << " cdear type:" << type << endl;
+////}
 //
-//void testCamera(void)
-//{
-//	Video_Recorder* recorder = create_video_recorder(640, 480);
-//	recorder->setDataCallBack(recorder,(void*)cdear,(void*)cdear);
-//	start_video_recorder(recorder);
-//	stop_video_recorder(recorder);
-//	free(recorder);
-//	recorder = NULL;
-//}
+////void testCamera(void)
+////{
+////	Video_Recorder* recorder = create_video_recorder(640, 480);
+////	recorder->setDataCallBack(recorder, (void*) cdear, (void*) cdear);
+////	start_video_recorder(recorder);
+////	stop_video_recorder(recorder);
+////	free(recorder);
+////	recorder = NULL;
+////}
 //
 //int main(int argc, char **argv)
 //{
@@ -162,6 +178,7 @@
 ////		testParseFLV();
 ////		testH264ToFLV();
 ////		testH264ToRTMP();
+//		testNetH264ToRTMP();
 ////		testFLVData();
 ////		cout << "10" << endl;
 ////		usleep(5000000);
@@ -169,32 +186,8 @@
 ////	char* s = new char[100];
 ////	delete[] s;
 ////	}
-//	RTMPVideoLive live(outrtmp, 640, 480);
-//	 live.init();
-//	 live.start();
-//	 live.stop();
-////	testCamera();
 //	time_t t2 = time(NULL);
 //	printf("%ld\n", t2);
 //	return 0;
 //}
 //
-//#include "h264/NetH264Reader.h"
-//
-//#include <iostream>
-//
-//int main(int argc, char **argv)
-//{
-//
-//	NetH264Reader read("localhost", 8090);
-//	if (read.open())
-//	{
-//		while(1)
-//		{
-//			read.reader();
-//		}
-//	}
-//	return 0;
-//
-//}
-

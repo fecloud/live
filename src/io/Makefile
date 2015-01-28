@@ -1,4 +1,7 @@
-SOURCES +=src/io/FLVOutPutStream.cpp src/io/RTMPOutPutStream.cpp
+io_src += src/io/FLVOutPutStream.cpp src/io/RTMPOutPutStream.cpp
 	
-#OBJS +=src/io/FLVOutPutStream.o src/io/RTMPOutPutStream.o
+SOURCES += $(io_src) 
+
+io_module += $(patsubst %cpp,%o,$(filter %cpp ,$(io_src))) 
+io_module += $(patsubst %c,%o,$(filter %c ,$(io_src)))
 	

@@ -27,14 +27,20 @@ class NetH264Reader: public H264Reader
 private:
 	SocketAddress address;
 	StreamSocket socket;
-	FILE * fp;
+	Bytes head;
+	Bytes nalu;
+	bool readNaluBytes(int length);
+	bool readBytes(int length);
+	bool readHeadBytes(int length);
+	int getHeadBodyLength();
+	long long getHeadTime();
 
 public:
 	NetH264Reader(char*, unsigned short);
 	virtual ~NetH264Reader();
 	virtual bool close();
 	virtual bool open();
-	virtual Bytes* reader();
+	virtual H264NALU* readH264();
 };
 
 #endif /* CLIENT_NETH264READER_H_ */

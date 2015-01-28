@@ -28,8 +28,8 @@ extern "C" {
 #include "../vencoder/cedarv_osal_linux.h"
 
 #include "water_mark.h"
-#include "../utils.h"
-#include "../log.h"
+#include "../base/utils.h"
+#include "../base/log.h"
 
 //h264编码码率
 #ifndef H264_TB

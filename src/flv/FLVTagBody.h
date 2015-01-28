@@ -8,7 +8,7 @@
 #ifndef FLVTAGBODY_H_
 #define FLVTAGBODY_H_
 
-#include "../Bytes.h"
+#include "../base/Bytes.h"
 #include <iostream>
 
 class FLVTagBody

@@ -19,7 +19,7 @@
 #include "VideoLiveObserver.h"
 #include "VideoLiveObservable.h"
 
-#include "../utils.h"
+#include "../base/utils.h"
 
 using namespace Poco::Net;
 
@@ -37,6 +37,7 @@ public:
 	void run();
 	void doWork();
 	bool hand();
+	bool sendHeader();
 	bool sendData(const void* buffer, int length);
 
 };

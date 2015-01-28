@@ -15,6 +15,7 @@ Bytes::Bytes() {
 	data = NULL;
 	length = 0;
 	cpostion = 0;
+	capacity = 0;
 }
 
 Bytes::Bytes(char*data, int length) {
@@ -102,6 +103,22 @@ double Bytes::getDouble() {
 
 }
 
+long long Bytes::getLong()
+{
+	uint64_t t = ((((uint64_t) data[cpostion]) << 56)
+				| (((uint64_t) data[cpostion + 1] & 0xff) << 48)
+				| (((uint64_t) data[cpostion + 2] & 0xff) << 40)
+				| (((uint64_t) data[cpostion + 3] & 0xff) << 32)
+				| (((uint64_t) data[cpostion + 4] & 0xff) << 24)
+				| (((uint64_t) data[cpostion + 5] & 0xff) << 16)
+				| (((uint64_t) data[cpostion + 6] & 0xff) << 8)
+				| (((uint64_t) data[cpostion + 7] & 0xff)));
+		cpostion += 8;
+		return (union
+					{	uint64_t i;long long f;})
+			{	t}.f;
+}
+
 int Bytes::postion() {
 	return cpostion;
 }
@@ -177,6 +194,27 @@ void Bytes::putDouble(double d) {
 	data[cpostion + 7] = (t & 0xFF);
 	cpostion += 8;
 	length += 8;
+}
+
+void Bytes::putLong(long long d) {
+	uint64_t t = (union
+			{	long long f;uint64_t i;})
+	{	d}.i;
+	data[cpostion] =     (t >> 56) & 0xFF;
+	data[cpostion + 1] = (t >> 48) & 0xFF;
+	data[cpostion + 2] = (t >> 40) & 0xFF;
+	data[cpostion + 3] = (t >> 32) & 0xFF;
+	data[cpostion + 4] = (t >> 24) & 0xFF;
+	data[cpostion + 5] = (t >> 16) & 0xFF;
+	data[cpostion + 6] = (t >> 8) & 0xFF;
+	data[cpostion + 7] = (t & 0xFF);
+	cpostion += 8;
+	length += 8;
+}
+
+int Bytes::getCapacity()
+{
+	return capacity;
 }
 
 void Bytes::flip() {

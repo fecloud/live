@@ -10,20 +10,20 @@
 
 using namespace std;
 
-H264NALU::H264NALU()
+H264NALU::H264NALU() :
+		Bytes(), type(0)
 {
 
 }
 
 H264NALU::H264NALU(int capacity) :
-		Bytes(capacity)
+		Bytes(capacity), type(0)
 {
 
 }
 
 H264NALU::~H264NALU()
 {
-//	cout << "~H264NALU" << endl;
 }
 
 char H264NALU::getType()

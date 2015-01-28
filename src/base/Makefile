@@ -1,4 +1,4 @@
-base_src =src/main.cpp src/Bytes.cpp src/utils.c	
+base_src = src/base/Bytes.cpp src/base/utils.c	
 
 SOURCES += $(base_src)
 

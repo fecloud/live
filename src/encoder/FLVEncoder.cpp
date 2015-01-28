@@ -33,7 +33,7 @@ FLVEncoder::FLVEncoder(MediaOutputStream* out)
 	idr = new H264NALU(1024000);
 }
 
-FLVEncoder::FLVEncoder(MediaInputStream* in, MediaOutputStream* out)
+FLVEncoder::FLVEncoder(H264Reader* in, MediaOutputStream* out)
 {
 	this->in = in;
 	this->out = out;
@@ -214,13 +214,10 @@ void FLVEncoder::encoder()
 {
 	if (checkInAndOut())
 	{
-		Bytes* bytes = NULL;
 		H264NALU* nalu = NULL;
 		bool finish = false;
-		while ((bytes = in->reader()) && !finish)
+		while ((nalu = in->readH264()) && !finish)
 		{
-			nalu = (H264NALU*) bytes;
-//			std::cout << "address:" << nalu << " length:" << nalu->getLength() << std::endl;
 			switch (nalu->getType())
 			{
 			case SEI:
