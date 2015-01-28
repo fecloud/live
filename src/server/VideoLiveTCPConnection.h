@@ -19,6 +19,8 @@
 #include "VideoLiveObserver.h"
 #include "VideoLiveObservable.h"
 
+#include "../utils.h"
+
 using namespace Poco::Net;
 
 class VideoLiveTCPConnection: public TCPServerConnection, public VideoLiveObserver

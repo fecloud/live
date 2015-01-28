@@ -64,6 +64,7 @@ bool VideoLiveTCPConnection::sendData(const void* buffer, int length)
 {
 	bool re = false;
 	char lens[4];
+	char time[8];
 	try
 	{
 //		CPPLOG(length);
@@ -71,7 +72,18 @@ bool VideoLiveTCPConnection::sendData(const void* buffer, int length)
 		lens[1] = (length & 0xFFFFFF) >> 16;
 		lens[2] = (length & 0xFFFF) >> 8;
 		lens[3] = length;
-		if (socket().sendBytes(lens, 4) && socket().sendBytes(buffer, length))
+
+		long long t = current_time();
+		time[0] = (t & 0xFFFFFFFFFFFFFFFF) >> 56;
+		time[1] = (t & 0xFFFFFFFFFFFFFF) >> 48;
+		time[2] = (t & 0xFFFFFFFFFFFF) >> 40;
+		time[3] = (t & 0xFFFFFFFFFF) >> 32;
+		time[4] = (t & 0xFFFFFFFF) >> 24;
+		time[5] = (t & 0xFFFFFF) >> 16;
+		time[6] = (t & 0xFFFF) >> 8;
+		time[7] = t;
+
+		if (socket().sendBytes(lens, 4) && socket().sendBytes(time, 8) && socket().sendBytes(buffer, length))
 		{
 			re = true;
 		}
