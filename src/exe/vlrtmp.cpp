@@ -4,12 +4,13 @@
  *  Created on: 2015年1月28日
  *      Author: maygolf
  */
+
 #include <stdio.h>
 #include <iostream>
 
-#include "../h264/NetH264Reader.h"
-#include "../io/RTMPOutPutStream.h"
-#include "../encoder/FLVEncoder.h"
+#include "h264/NetH264Reader.h"
+#include "io/RTMPOutPutStream.h"
+#include "encoder/FLVEncoder.h"
 
 using namespace std;
 

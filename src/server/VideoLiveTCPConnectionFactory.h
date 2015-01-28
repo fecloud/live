@@ -13,7 +13,7 @@
 #include "Poco/Net/StreamSocket.h"
 #include <string.h>
 
-#include "VideoLiveTCPConnection.h"
+#include "server/VideoLiveTCPConnection.h"
 
 using namespace Poco;
 using namespace Poco::Net;

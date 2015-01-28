@@ -8,7 +8,7 @@
 #ifndef SRC_SERVER_VIDEOLIVEOBSERVER_H_
 #define SRC_SERVER_VIDEOLIVEOBSERVER_H_
 
-#include "../media/videorecorder.h"
+#include "media/videorecorder.h"
 
 class VideoLiveObserver
 {

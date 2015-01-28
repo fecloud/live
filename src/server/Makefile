@@ -1,4 +1,4 @@
-server_src +=src/server/VideoLiveObservable.cpp src/server/VideoLiveObserver.cpp src/server/VideoLiveServer.cpp src/server/VideoLiveTCPConnection.cpp src/server/vlserver.cpp
+server_src +=src/server/VideoLiveObservable.cpp src/server/VideoLiveObserver.cpp src/server/VideoLiveServer.cpp src/server/VideoLiveTCPConnection.cpp
  
 SOURCES+=$(server_src)
 

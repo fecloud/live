@@ -11,10 +11,10 @@
 #include <pthread.h>
 #include <list>
 
-#include "../base/utils.h"
-#include "../media/videorecorder.h"
+#include "base/utils.h"
+#include "media/videorecorder.h"
 
-#include "VideoLiveObserver.h"
+#include "server/VideoLiveObserver.h"
 
 using namespace std;
 

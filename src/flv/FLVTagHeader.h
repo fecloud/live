@@ -10,7 +10,7 @@
 
 #include <stdint.h>
 
-#include "../base/Bytes.h"
+#include "base/Bytes.h"
 class FLVTagHeader
 {
 private:

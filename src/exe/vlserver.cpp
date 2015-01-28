@@ -6,8 +6,14 @@
  */
 #include <iostream>
 
-#include "VideoLiveServer.h"
-#include "VideoLiveObservable.h"
+#include "server/VideoLiveObservable.h"
+#include "server/VideoLiveServer.h"
+
+using namespace std;
+
+#include <iostream>
+
+#include "server/VideoLiveServer.h"
 
 using namespace std;
 

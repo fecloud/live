@@ -8,7 +8,7 @@
 #ifndef FLVDATA_H_
 #define FLVDATA_H_
 
-#include "../../base/Bytes.h"
+#include "base/Bytes.h"
 /**
  * (Encoded as IEEE 64-bit double-precision floating point number)
  */

@@ -19,17 +19,17 @@ extern "C" {
 #include <unistd.h>
 #include <sys/time.h>
 
-#include "../vencoder/CDX_Debug.h"
-#include "../vencoder/include_vencoder/H264encLibApi.h"
-#include "../vencoder/include_vencoder/venc.h"
-#include "../camera/CameraSource.h"
-#include "../vencoder/include_vencoder/text.h"
-#include "../camera/V4L2.h"
-#include "../vencoder/cedarv_osal_linux.h"
+#include "vencoder/CDX_Debug.h"
+#include "vencoder/include_vencoder/H264encLibApi.h"
+#include "vencoder/include_vencoder/venc.h"
+#include "camera/CameraSource.h"
+#include "vencoder/include_vencoder/text.h"
+#include "camera/V4L2.h"
+#include "vencoder/cedarv_osal_linux.h"
 
 #include "water_mark.h"
-#include "../base/utils.h"
-#include "../base/log.h"
+#include "base/utils.h"
+#include "base/log.h"
 
 //h264编码码率
 #ifndef H264_TB

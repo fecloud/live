@@ -4,7 +4,7 @@ prefix=/usr/local
 CC=$(CROSS_COMPILE)gcc
 CXX=$(CROSS_COMPILE)g++
 
-INC=-Ithird
+INC=-Ithird -Isrc
 
 #-lliveMedia -lBasicUsageEnvironment -lUsageEnvironment -lgroupsock
 LIBS=-lrtmp -lpthread -lvencoder -lliveMedia -lrt -lPocoXML -lPocoJSON -lPocoUtil -lPocoNet -lPocoFoundation -lgroupsock -lUsageEnvironment -lBasicUsageEnvironment -ldl
@@ -28,32 +28,37 @@ include src/camera/Makefile
 include src/live/Makefile
 include src/media/Makefile
 include src/server/Makefile
-include src/rtmp/Makefile
+include src/exe/Makefile
 
 OBJS += $(patsubst %cpp,%o,$(filter %cpp ,$(SOURCES))) 
 OBJS +=$(patsubst %c,%o,$(filter %c ,$(SOURCES)))
 
 TARGET :=live
 
-all:  vlserver vlrtmp
+all:  vlserver vlrtmp vlsave
 
 live: $(OBJS)
 	$(CXX) $(LIBS_DIR)  -o $@ $(OBJS) $(LIBS)
 
 vlserver: $(OBJS)
-	$(CXX) $(LIBS_DIR)  -o $@  $(base_module) $(carmer_module) $(media_module) $(server_module) -lpthread -lvencoder -lPocoXML -lPocoJSON -lPocoUtil -lPocoNet -lPocoFoundation -ldl -lrt
+	$(CXX) $(LIBS_DIR)  -o $@ $(vlserver) $(base_module) $(carmer_module) $(media_module) $(server_module) -lpthread -lvencoder -lPocoXML -lPocoJSON -lPocoUtil -lPocoNet -lPocoFoundation -ldl -lrt
 
 vlrtmp: $(OBJS)
-	$(CXX) $(LIBS_DIR)  -o $@ $(base_module) $(vlrtmp_module) $(io_module) $(h264_module) $(flv_module) $(lang_module) $(encode_module)  -lrtmp -lPocoXML -lPocoJSON -lPocoUtil -lPocoNet -lPocoFoundation -ldl 
+	$(CXX) $(LIBS_DIR)  -o $@ $(vlrtmp) $(base_module) $(io_module) $(h264_module) $(flv_module) $(lang_module) $(encode_module)  -lrtmp -lPocoXML -lPocoJSON -lPocoUtil -lPocoNet -lPocoFoundation -ldl 
+	
+vlsave: $(OBJS)
+	$(CXX) $(LIBS_DIR)  -o $@ $(vlsave) $(base_module) $(h264_module)  -lrtmp -lPocoXML -lPocoJSON -lPocoUtil -lPocoNet -lPocoFoundation -ldl 
 	
 help:
 
 install:
 	mkdir -p $(prefix)
 	cp vlserver $(prefix)/vlserver
+	cp vlrtmp $(prefix)/vlrtmp
+	cp vlsave $(prefix)/vlsave
 
 clean:
-	rm -rf $(OBJS) vlserver
+	rm -rf $(OBJS) vlserver vlrtmp vlsave
 	
 %.o:%.c
 	$(CC) $(CFLAGS) -c  $< -o $@ 

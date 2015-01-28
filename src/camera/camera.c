@@ -1,6 +1,4 @@
-#define LOG_TAG "Camera"
-//#include <cutils/log.h>
-#include "../vencoder/CDX_Debug.h"
+#include "vencoder/CDX_Debug.h"
 
 #include "V4L2.h"
 #include "camera.h"
@@ -13,8 +11,7 @@ typedef struct CameraParm
 	int framerate;
 	int width;
 	int height;
-}CameraParm;
-
+} CameraParm;
 
 int CameraGetOneframe(void* v4l2ctx, struct v4l2_buffer *buffer)
 {
@@ -25,11 +22,11 @@ int CameraGetOneframe(void* v4l2ctx, struct v4l2_buffer *buffer)
 		LOGW("wait v4l2 buffer time out");
 		return __LINE__;
 	}
-	
+
 	// get one video frame
 	struct v4l2_buffer buf;
 	memset(&buf, 0, sizeof(buf));
-	ret = getPreviewFrame(v4l2ctx,&buf);
+	ret = getPreviewFrame(v4l2ctx, &buf);
 	if (ret != 0)
 	{
 		return ret;
@@ -51,7 +48,8 @@ void *CreateCameraContext()
 }
 
 void DestroyCameraContext(void* v4l2ctx)
-{
+{
+
 	DestroyV4l2Context(v4l2ctx);
 }
 
@@ -74,7 +72,7 @@ int StartCamera(void* v4l2ctx, int *width, int *height)
 
 	// set capture mode
 	struct v4l2_streamparm params;
-  	params.parm.capture.timeperframe.numerator = 1;
+	params.parm.capture.timeperframe.numerator = 1;
 	params.parm.capture.timeperframe.denominator = mframerate;
 	params.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
 	params.parm.capture.capturemode = V4L2_MODE_VIDEO;
@@ -85,31 +83,31 @@ int StartCamera(void* v4l2ctx, int *width, int *height)
 	v4l2SetVideoParams(v4l2ctx, width, height, pix_fmt);
 
 	// set fps
-	v4l2setCaptureParams(v4l2ctx,&params);
-	
+	v4l2setCaptureParams(v4l2ctx, &params);
+
 	// v4l2 request buffers
 	v4l2ReqBufs(v4l2ctx, &mbuffernuber);
 
 	// v4l2 query buffers
 	v4l2QueryBuf(v4l2ctx);
-	
+
 	// stream on the v4l2 device
 	v4l2StartStreaming(v4l2ctx);
 
-    return 0;
+	return 0;
 }
 
 int StopCamera(void* v4l2ctx)
 {
 	LOGV("stopCamera");
-	
+
 	// v4l2 device stop stream
 	v4l2StopStreaming(v4l2ctx);
 
 	// v4l2 device unmap buffers
-    v4l2UnmapBuf(v4l2ctx);
+	v4l2UnmapBuf(v4l2ctx);
 
-    return 0;
+	return 0;
 }
 
 #if 0
@@ -130,7 +128,7 @@ int main()
 
 	struct v4l2_buffer buf;
 	memset(&buf, 0, sizeof(buf));
-	
+
 	mV4l2_ctx = CreateV4l2Context();
 
 	setV4L2DeviceName(mV4l2_ctx, "/dev/video1");
@@ -146,7 +144,8 @@ int main()
 
 	StartCamera(mV4l2_ctx, &width, &height);
 
-	while(number < 300) {
+	while(number < 300)
+	{
 
 		CameraGetOneframe(mV4l2_ctx,&buf);
 		CameraReturnOneframe(mV4l2_ctx,buf.index);
@@ -154,7 +153,7 @@ int main()
 
 		number ++;
 	}
-	
+
 	StopCamera(mV4l2_ctx);
 
 	CloseCamera(mV4l2_ctx);
