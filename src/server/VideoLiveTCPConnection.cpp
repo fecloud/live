@@ -12,6 +12,7 @@
 #include "Poco/Timestamp.h"
 #include "Poco/Exception.h"
 #include "Poco/DateTimeFormatter.h"
+#include "Poco/LocalDateTime.h"
 
 #include "VideoLiveTCPConnection.h"
 
@@ -25,10 +26,44 @@ VideoLiveTCPConnection::VideoLiveTCPConnection(const StreamSocket& s) :
 {
 }
 
+bool VideoLiveTCPConnection::hand()
+{
+	try
+	{
+		int len = strlen(VLSERVER_HAND);
+		char chand[len + 1];
+		int read = 0;
+		int tread = 0;
+		while (read < len)
+		{
+			tread = socket().receiveBytes(&(chand[read]), (len - read));
+			if (tread == 0)
+			{
+				return false;
+			}
+			read += tread;
+		}
+
+		chand[len] = '\0';
+
+		string server(VLSERVER_HAND);
+		string c(chand);
+		if (server == c)
+		{
+			return true;
+		}
+	} catch (Exception& e)
+	{
+
+	}
+
+	return false;
+}
+
 bool VideoLiveTCPConnection::sendData(const void* buffer, int length)
 {
 	bool re = false;
-	char *lens = new char[4];
+	char lens[4];
 	try
 	{
 //		CPPLOG(length);
@@ -36,7 +71,7 @@ bool VideoLiveTCPConnection::sendData(const void* buffer, int length)
 		lens[1] = (length & 0xFFFFFF) >> 16;
 		lens[2] = (length & 0xFFFF) >> 8;
 		lens[3] = length;
-		if (socket().sendBytes(lens, 4) &&socket().sendBytes(buffer, length))
+		if (socket().sendBytes(lens, 4) && socket().sendBytes(buffer, length))
 		{
 			re = true;
 		}
@@ -44,7 +79,6 @@ bool VideoLiveTCPConnection::sendData(const void* buffer, int length)
 	{
 		re = false;
 	}
-	delete[] lens;
 	return re;
 }
 
@@ -108,27 +142,45 @@ void VideoLiveTCPConnection::run()
 {
 	VideoLiveObservable* instance = VideoLiveObservable::createNew();
 
+	LocalDateTime ld;
+
 	// 日志输出连接的TCP用户的地址（IP和端口）
-	cout << "request from " + this->socket().peerAddress().toString() << endl;
-	try
+	string add = socket().peerAddress().toString();
+
+	cout << ld.year() << "-" << ld.month() << "-" << ld.day() << " " << ld.hour() << ":" << ld.minute() << ":" << ld.second() << " request from " + add << endl;
+
+	if (hand())
 	{
-		cpyVencSeqHeader(instance->registerVideoLiveObserver(this));
-		if (this->seqhead.length > 0)
+		LocalDateTime ld1;
+		cout << ld1.year() << "-" << ld1.month() << "-" << ld1.day() << " " << ld1.hour() << ":" << ld1.minute() << ":" << ld1.second() << " " + add << " hand success" << endl;
+		try
 		{
-			if (sendData(this->seqhead.bufptr, this->seqhead.length))
+			cpyVencSeqHeader(instance->registerVideoLiveObserver(this));
+			if (this->seqhead.length > 0)
 			{
-				doWork();
-			}
-			else
-			{
-				CPPLOG("send head error finish");
-			}
+				if (sendData(this->seqhead.bufptr, this->seqhead.length))
+				{
+					doWork();
+				}
+				else
+				{
+					CPPLOG("send head error finish");
+				}
 
+			}
+			instance->unRegisterVideoLiveObserver(this);
+
+		} catch (Poco::Exception& e)
+		{
+			instance->unRegisterVideoLiveObserver(this);
 		}
-		instance->unRegisterVideoLiveObserver(this);
-
-	} catch (Poco::Exception& e)
+		LocalDateTime ld2;
+		cout << ld2.year() << "-" << ld2.month() << "-" << ld2.day() << " " << ld2.hour() << ":" << ld2.minute() << ":" << ld2.second() << " " + add << " disconnet" << endl;
+	}
+	else
 	{
-		instance->unRegisterVideoLiveObserver(this);
+		LocalDateTime ld;
+		cout << ld.year() << "-" << ld.month() << "-" << ld.day() << " " << ld.hour() << ":" << ld.minute() << ":" << ld.second() << " " + add << " hand error disconnet" << endl;
+
 	}
 }

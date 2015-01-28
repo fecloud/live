@@ -8,6 +8,10 @@
 #ifndef SRC_SERVER_VIDEOLIVETCPCONNECTION_H_
 #define SRC_SERVER_VIDEOLIVETCPCONNECTION_H_
 
+#ifndef VLSERVER_HAND
+#define VLSERVER_HAND "vlserver"
+#endif
+
 #include "Poco/Net/TCPServerConnection.h"
 #include "Poco/Net/StreamSocket.h"
 #include <string.h>
@@ -20,8 +24,8 @@ using namespace Poco::Net;
 class VideoLiveTCPConnection: public TCPServerConnection, public VideoLiveObserver
 {
 
-private :
-	 bool firstI;
+private:
+	bool firstI;
 
 public:
 	VideoLiveTCPConnection(const StreamSocket& s);
@@ -30,6 +34,7 @@ public:
 	}
 	void run();
 	void doWork();
+	bool hand();
 	bool sendData(const void* buffer, int length);
 
 };

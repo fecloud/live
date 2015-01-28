@@ -15,6 +15,9 @@ VideoLiveObserver::VideoLiveObserver()
 {
 	pthread_mutex_init(&mt, NULL);
 	pthread_cond_init(&ct, NULL);
+
+	seqhead.bufptr = NULL;
+
 	buffer.id = 0;
 	buffer.ptr0 = buffer.ptr1 = 0;
 	buffer.pts = 0;
