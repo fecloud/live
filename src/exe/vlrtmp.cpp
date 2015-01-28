@@ -16,14 +16,14 @@ using namespace std;
 
 int main(int argc, char **argv)
 {
-	if (argc < 4)
+	if (argc < 3)
 	{
-		cout << "Uage:" << argv[0] << " <src server name > <src server port > <rtmp server>" << endl;
+		cout << "Uage:" << argv[0] << " <src server> <rtmp server>" << endl;
 		exit(0);
 	}
-	NetH264Reader reader(argv[1], atoi(argv[2]));
+	NetH264Reader reader(argv[1]);
 
-	RTMPOutPutStream output(argv[3], false, 25);
+	RTMPOutPutStream output(argv[2], false, 25);
 	FLVEncoder encoder(&reader, &output);
 	encoder.encoder();
 }

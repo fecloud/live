@@ -10,8 +10,8 @@
 using namespace Poco;
 using namespace Poco::Net;
 
-NetH264Reader::NetH264Reader(char* host, unsigned short port) :
-		address(string(host), port), head(12), nalu(4)
+NetH264Reader::NetH264Reader(char *host) :
+		address(string(host)), head(12), nalu(4)
 {
 }
 

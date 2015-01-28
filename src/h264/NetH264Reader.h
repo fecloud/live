@@ -36,7 +36,7 @@ private:
 	long long getHeadTime();
 
 public:
-	NetH264Reader(char*, unsigned short);
+	NetH264Reader(char*);
 	virtual ~NetH264Reader();
 	virtual bool close();
 	virtual bool open();

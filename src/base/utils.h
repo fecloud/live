@@ -84,6 +84,11 @@ void YUV422To420(unsigned char yuv422[], unsigned char yuv420[], unsigned int wi
  */
 long long current_time();
 
+/**
+ * 当前的秒
+ */
+long long current_time_m();
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

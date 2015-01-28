@@ -78,6 +78,15 @@ long long current_time()
 	return t;
 }
 
+long long current_time_m()
+{
+	struct timeval t_start;
+	//get start time
+	gettimeofday(&t_start, 0);
+	long long t = ((long long)t_start.tv_sec) ;
+	return t;
+}
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

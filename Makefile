@@ -35,7 +35,7 @@ OBJS +=$(patsubst %c,%o,$(filter %c ,$(SOURCES)))
 
 TARGET :=live
 
-all:  vlserver vlrtmp vlsave
+all:  vlserver vlrtmp vlsave recorder
 
 live: $(OBJS)
 	$(CXX) $(LIBS_DIR)  -o $@ $(OBJS) $(LIBS)
@@ -44,10 +44,13 @@ vlserver: $(OBJS)
 	$(CXX) $(LIBS_DIR)  -o $@ $(vlserver) $(base_module) $(carmer_module) $(media_module) $(server_module) -lpthread -lvencoder -lPocoXML -lPocoJSON -lPocoUtil -lPocoNet -lPocoFoundation -ldl -lrt
 
 vlrtmp: $(OBJS)
-	$(CXX) $(LIBS_DIR)  -o $@ $(vlrtmp) $(base_module) $(io_module) $(h264_module) $(flv_module) $(lang_module) $(encode_module)  -lrtmp -lPocoXML -lPocoJSON -lPocoUtil -lPocoNet -lPocoFoundation -ldl 
-	
+	$(CXX) $(LIBS_DIR)  -o $@ $(vlrtmp) $(base_module) $(io_module) $(h264_module) $(flv_module) $(lang_module) $(encode_module) -lpthread  -lrtmp -lPocoXML -lPocoJSON -lPocoUtil -lPocoNet -lPocoFoundation -ldl -lrt 
+
 vlsave: $(OBJS)
-	$(CXX) $(LIBS_DIR)  -o $@ $(vlsave) $(base_module) $(h264_module)  -lrtmp -lPocoXML -lPocoJSON -lPocoUtil -lPocoNet -lPocoFoundation -ldl 
+	$(CXX) $(LIBS_DIR)  -o $@ $(vlsave) $(base_module) $(h264_module) -lpthread  -lrtmp -lPocoXML -lPocoJSON -lPocoUtil -lPocoNet -lPocoFoundation -ldl -lrt 
+	
+recorder: $(OBJS)
+	$(CXX) $(LIBS_DIR)  -o $@ $(recorder) $(base_module) $(carmer_module) $(media_module) -lpthread -lvencoder -ldl -lrt 
 	
 help:
 
@@ -56,9 +59,10 @@ install:
 	cp vlserver $(prefix)/vlserver
 	cp vlrtmp $(prefix)/vlrtmp
 	cp vlsave $(prefix)/vlsave
+	cp recorder $(prefix)/recorder
 
 clean:
-	rm -rf $(OBJS) vlserver vlrtmp vlsave
+	rm -rf $(OBJS) vlserver vlrtmp vlsave recorder
 	
 %.o:%.c
 	$(CC) $(CFLAGS) -c  $< -o $@ 
