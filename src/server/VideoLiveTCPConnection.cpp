@@ -110,9 +110,9 @@ void VideoLiveTCPConnection::doWork()
 //		CPPLOG("pthread_mutex_lock(&mt)");
 		pthread_mutex_lock(&mt);
 
-		if (buffer.id > 0)
+		if (bufferLength > 0)
 		{
-			if (!firstI && (buffer.ptr0[4] & 0x1F) != 5)
+			if (!firstI && (buffer[4] & 0x1F) != 5)
 			{
 				pthread_mutex_unlock(&mt);
 				continue;
@@ -124,15 +124,8 @@ void VideoLiveTCPConnection::doWork()
 			try
 			{
 				//send
-				if (sendData(buffer.ptr0, buffer.size0))
+				if (sendData(buffer, bufferLength))
 				{
-					if (buffer.size1 > 0)
-					{
-						if (!sendData(buffer.ptr1, buffer.size1))
-						{
-							break;
-						}
-					}
 					resetVencOutputBuffer();
 				}
 				else

@@ -10,12 +10,12 @@
 
 #include <fstream>
 
-#include "MediaOutputStream.h"
-#include "../flv/FLVType.h"
-#include "../flv/FLVTag.h"
-#include "../flv/FLVTagHeader.h"
-#include "../flv/FLVScriptTagBody.h"
-#include "../flv/FLVVideoTagBody.h"
+#include "io/MediaOutputStream.h"
+#include "flv/FLVType.h"
+#include "flv/FLVTag.h"
+#include "flv/FLVTagHeader.h"
+#include "flv/FLVScriptTagBody.h"
+#include "flv/FLVVideoTagBody.h"
 
 using namespace std;
 

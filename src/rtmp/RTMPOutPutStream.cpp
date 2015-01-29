@@ -6,8 +6,8 @@
  */
 #include <string.h>
 
-#include "RTMPOutPutStream.h"
-#include "../base/utils.h"
+#include "rtmp/RTMPOutPutStream.h"
+#include "base/utils.h"
 
 RTMP*rtmp = NULL; //rtmp应用指针
 RTMPPacket* packet = NULL; //rtmp包结构

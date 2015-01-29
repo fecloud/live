@@ -6,8 +6,12 @@ CXX=$(CROSS_COMPILE)g++
 
 INC=-Ithird -Isrc
 
-#-lliveMedia -lBasicUsageEnvironment -lUsageEnvironment -lgroupsock
-LIBS=-lrtmp -lpthread -lvencoder -lliveMedia -lrt -lPocoXML -lPocoJSON -lPocoUtil -lPocoNet -lPocoFoundation -lgroupsock -lUsageEnvironment -lBasicUsageEnvironment -ldl
+LIBS_base= -lpthread -lrt -ldl
+LIBS_encode = -lvencoder
+LIBS_rtmp = -lrtmp
+LIBS_rtsp = -lliveMedia -lgroupsock -lUsageEnvironment -lBasicUsageEnvironment
+LIBS_poco = -lPocoXML -lPocoJSON -lPocoUtil -lPocoNet -lPocoFoundation
+
 LIBS_DIR=-L./lib
 
 OPT=-O2 $(INC) -DSOCKLEN_T=socklen_t -DNO_SSTREAM=1 -D_LARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64 -DC_DEBUG=0 -DCPP_DEBUG=0
@@ -22,10 +26,10 @@ include src/base/Makefile
 include src/h264/Makefile
 include src/flv/lang/Makefile
 include src/flv/Makefile
-include src/io/Makefile
 include src/encoder/Makefile
 include src/camera/Makefile
-include src/live/Makefile
+include src/rtmp/Makefile
+include src/rtsp/Makefile
 include src/media/Makefile
 include src/server/Makefile
 include src/exe/Makefile
@@ -33,24 +37,27 @@ include src/exe/Makefile
 OBJS += $(patsubst %cpp,%o,$(filter %cpp ,$(SOURCES))) 
 OBJS +=$(patsubst %c,%o,$(filter %c ,$(SOURCES)))
 
-TARGET :=live
+TARGET :=all
 
-all:  vlserver vlrtmp vlsave recorder
+all:  vlserver vlrtmp vlrtsp vlsave recorder
 
 live: $(OBJS)
 	$(CXX) $(LIBS_DIR)  -o $@ $(OBJS) $(LIBS)
 
 vlserver: $(OBJS)
-	$(CXX) $(LIBS_DIR)  -o $@ $(vlserver) $(base_module) $(carmer_module) $(media_module) $(server_module) -lpthread -lvencoder -lPocoXML -lPocoJSON -lPocoUtil -lPocoNet -lPocoFoundation -ldl -lrt
+	$(CXX) $(LIBS_DIR)  -o $@ $(vlserver) $(base_module) $(carmer_module) $(media_module) $(server_module) $(LIBS_base) $(LIBS_encode) $(LIBS_poco)
 
 vlrtmp: $(OBJS)
-	$(CXX) $(LIBS_DIR)  -o $@ $(vlrtmp) $(base_module) $(io_module) $(h264_module) $(flv_module) $(lang_module) $(encode_module) -lpthread  -lrtmp -lPocoXML -lPocoJSON -lPocoUtil -lPocoNet -lPocoFoundation -ldl -lrt 
+	$(CXX) $(LIBS_DIR)  -o $@ $(vlrtmp) $(base_module) $(rtmp_module) $(h264_module) $(flv_module) $(lang_module) $(encode_module) $(LIBS_base) $(LIBS_rtmp) $(LIBS_poco)
+
+vlrtsp: $(OBJS)
+	$(CXX) $(LIBS_DIR)  -o $@ $(vlrtsp) $(base_module) $(io_module) $(h264_module) $(rtsp_module) $(LIBS_base) $(LIBS_rtsp) $(LIBS_poco) 
 
 vlsave: $(OBJS)
-	$(CXX) $(LIBS_DIR)  -o $@ $(vlsave) $(base_module) $(h264_module) -lpthread  -lrtmp -lPocoXML -lPocoJSON -lPocoUtil -lPocoNet -lPocoFoundation -ldl -lrt 
+	$(CXX) $(LIBS_DIR)  -o $@ $(vlsave) $(base_module) $(h264_module) $(LIBS_base) $(LIBS_poco) 
 	
 recorder: $(OBJS)
-	$(CXX) $(LIBS_DIR)  -o $@ $(recorder) $(base_module) $(carmer_module) $(media_module) -lpthread -lvencoder -ldl -lrt 
+	$(CXX) $(LIBS_DIR)  -o $@ $(recorder) $(base_module) $(carmer_module) $(media_module) $(LIBS_base) $(LIBS_encode)
 	
 help:
 
@@ -58,11 +65,12 @@ install:
 	mkdir -p $(prefix)
 	cp vlserver $(prefix)/vlserver
 	cp vlrtmp $(prefix)/vlrtmp
+	cp vlrtsp $(prefix)/vlrtsp
 	cp vlsave $(prefix)/vlsave
 	cp recorder $(prefix)/recorder
 
 clean:
-	rm -rf $(OBJS) vlserver vlrtmp vlsave recorder
+	rm -rf $(OBJS) vlserver vlrtmp vlrtsp vlsave recorder
 	
 %.o:%.c
 	$(CC) $(CFLAGS) -c  $< -o $@ 

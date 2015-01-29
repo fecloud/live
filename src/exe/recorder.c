@@ -39,5 +39,6 @@ int main(int argc, char **argv)
 {
 	t = current_time_m();
 	testCamera();
+	return 1;
 }
 

@@ -9,7 +9,7 @@
 #include <iostream>
 
 #include "h264/NetH264Reader.h"
-#include "io/RTMPOutPutStream.h"
+#include "rtmp/RTMPOutPutStream.h"
 #include "encoder/FLVEncoder.h"
 
 using namespace std;

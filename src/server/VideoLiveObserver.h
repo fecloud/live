@@ -10,6 +10,8 @@
 
 #include "media/videorecorder.h"
 
+#define OUTPUT_BUFFER 1024 * 512
+
 class VideoLiveObserver
 {
 
@@ -17,7 +19,8 @@ protected:
 	pthread_mutex_t mt;
 	pthread_cond_t ct;
 	VencSeqHeader seqhead;
-	VencOutputBuffer buffer;
+	char *buffer;
+	int bufferLength;
 	void cpyVencSeqHeader(VencSeqHeader* head);
 	void cpyVencOutputBuffer(VencOutputBuffer*);
 	void resetVencOutputBuffer();

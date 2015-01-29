@@ -1,4 +1,4 @@
-flv_src += src/flv/FLVTag.cpp src/flv/FLVScriptTagBody.cpp src/flv/FLVTagHeader.cpp src/flv/FLVVideoTagBody.cpp src/flv/FLVReader.cpp \
+flv_src += src/flv/FLVTag.cpp src/flv/FLVScriptTagBody.cpp src/flv/FLVTagHeader.cpp src/flv/FLVVideoTagBody.cpp src/flv/FLVReader.cpp src/flv/FLVOutPutStream.cpp
 	
 SOURCES += $(flv_src)
 

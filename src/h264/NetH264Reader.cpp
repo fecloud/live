@@ -6,6 +6,9 @@
  */
 
 #include "NetH264Reader.h"
+#include "Poco/LocalDateTime.h"
+#include "Poco/DateTime.h"
+#include "Poco/Timestamp.h"
 
 using namespace Poco;
 using namespace Poco::Net;
@@ -142,6 +145,11 @@ H264NALU* NetH264Reader::readH264()
 {
 	if (readHeadBytes(head.getCapacity()))
 	{
+		Timestamp t(getHeadTime());
+		DateTime ld(t);
+
+		//cout << "getHeadTime 1 " << ld.minute() << " " <<ld.second() << endl;
+		//cout << "getHeadTime 2 " << LocalDateTime().minute() << " " << LocalDateTime().second() << endl;
 		if (readBytes(getHeadBodyLength()))
 		{
 			return byte;
