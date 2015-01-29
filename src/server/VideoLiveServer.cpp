@@ -31,12 +31,19 @@ VideoLiveServer::~VideoLiveServer()
 int VideoLiveServer::main(const std::vector<std::string>& args)
 {
 	std::string port = *(++args.begin());
-	cout << "VideoLiveServer runing port " << port << endl;
+	int threads = 4;
+
+	if(args.size() == 3)
+	{
+		std::string strthread = *(2+args.begin());
+		threads = atoi(strthread.c_str());
+	}
+	cout << "VideoLiveServer runing port " << port << " " << threads << " thread"<< endl;
 	// 1. Bind a ServerSocket with an address
 	ServerSocket serverSocket(atoi(port.c_str()));
 
 	TCPServerParams::Ptr param = new TCPServerParams();
-	param->setMaxThreads(3);
+	param->setMaxThreads(threads);
 
 	// 2. Pass the ServerSocket to a TCPServer
 	TCPServer server(new VideoLiveTCPConnectionFactory(), serverSocket,param);

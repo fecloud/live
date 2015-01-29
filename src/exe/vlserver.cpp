@@ -21,7 +21,7 @@ int main(int argc, char **argv)
 {
 	if (argc < 2)
 	{
-		cout << "Uage:" << argv[0] << " <port>" << endl;
+		cout << "Uage:" << argv[0] << " <port> [ threads ]" << endl;
 		exit(0);
 	}
 	VideoLiveObservable* oable = VideoLiveObservable::createNew();
