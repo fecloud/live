@@ -25,6 +25,7 @@ bool NetH264Reader::open()
 	try
 	{
 		socket.connect(address, Timespan(10, 0));
+		socket.setReceiveTimeout(Timespan(10, 0));
 		const char *hand = "vlserver";
 		socket.sendBytes(hand, strlen(hand));
 	} catch (Exception& e)

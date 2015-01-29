@@ -21,18 +21,26 @@ int main(int argc, char **argv)
 
 	if (argc < 3)
 	{
-		cout << "Uage:" << argv[0] << " <src server > <save file >" << endl;
+		cout << "Uage:" << argv[0] << " [ -f ] <src server > <save file >" << endl;
 		exit(0);
 	}
 
-	NetH264Reader reader(argv[1]);
+	bool dfps = false;
+	int postion = 0;
+	if (argc == 4 && (string(argv[1]) == string("-f")))
+	{
+		postion++;
+		dfps = true;
+	}
+
+	NetH264Reader reader(argv[postion + 1]);
 	FILE *out;
 
-	cout << "connect server " << argv[1] << endl;
+	cout << "connect server " << argv[postion + 1] << endl;
 	if (reader.open())
 	{
-		cout << "connect server " << argv[1] << " sucess" << endl;
-		out = fopen(argv[2], "wb");
+		cout << "connect server " << argv[postion + 1] << " sucess" << endl;
+		out = fopen(argv[postion + 2], "wb");
 		if (out)
 		{
 
@@ -46,15 +54,20 @@ int main(int argc, char **argv)
 				nalu = reader.readH264();
 				if (nalu != 0)
 				{
-					if (LocalDateTime().second() == time)
+					if (dfps)
 					{
-						fps++;
-					}
-					else
-					{
-						cout << LocalDateTime().second() <<"recevie fps:" << fps << endl;
-						fps = 0;
-						time = LocalDateTime().second();
+						if (LocalDateTime().second() == time)
+						{
+							fps++;
+						}
+						else
+						{
+							LocalDateTime ld;
+							cout << ld.year() << "-" << ld.month() << "-" << ld.day() << " " << ld.hour() << ":" << ld.minute() << ":" << ld.second() << " recevie fps:" << fps
+									<< endl;
+							fps = 0;
+							time = LocalDateTime().second();
+						}
 					}
 					fwrite(naluHead, 4, 1, out);
 					fwrite(nalu->getData(), nalu->getLength(), 1, out);
@@ -69,12 +82,12 @@ int main(int argc, char **argv)
 		}
 		else
 		{
-			cout << "open file " << argv[2] << " error" << endl;
+			cout << "open file " << argv[postion + 2] << " error" << endl;
 		}
 	}
 	else
 	{
-		cout << "connect server " << argv[1] << " fail" << endl;
+		cout << "connect server " << argv[postion + 1] << " fail" << endl;
 	}
 
 }
