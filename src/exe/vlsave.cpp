@@ -4,7 +4,7 @@
  *  Created on: 2015年1月28日
  *      Author: maygolf
  */
-
+#include <signal.h>
 #include <stdio.h>
 #include <iostream>
 
@@ -16,6 +16,13 @@
 using namespace std;
 using namespace Poco;
 
+int run = 1;
+/* 信号处理例程，其中dunno将会得到信号的值 */
+static void sigroutine(int dunno)
+{ 
+    run = 0;
+}
+
 int main(int argc, char **argv)
 {
 
@@ -24,6 +31,10 @@ int main(int argc, char **argv)
 		cout << "Uage:" << argv[0] << " [ -f ] <src server > <save file >" << endl;
 		exit(0);
 	}
+
+	signal(SIGHUP, sigroutine); //* 下面设置三个信号的处理方法
+	signal(SIGINT, sigroutine);
+	signal(SIGQUIT, sigroutine);
 
 	bool dfps = false;
 	int postion = 0;
@@ -49,7 +60,7 @@ int main(int argc, char **argv)
 			{ 0x0, 0x0, 0x0, 0x1 };
 			int time = LocalDateTime().second();
 			int fps = 0;
-			while (1)
+			while (run)
 			{
 				nalu = reader.readH264();
 				if (nalu != 0)
@@ -79,6 +90,9 @@ int main(int argc, char **argv)
 				}
 
 			}
+			
+			fclose(out);
+			out = NULL;
 		}
 		else
 		{

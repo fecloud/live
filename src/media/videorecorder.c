@@ -136,12 +136,12 @@ int start_video_recorder(Video_Recorder* recorder)
 	// init base config param
 	recorder->base_cfg.codectype = VENC_CODEC_H264;
 
-	recorder->base_cfg.framerate = 25;
+	recorder->base_cfg.framerate = CAP_FPS;
 	recorder->base_cfg.input_width = recorder->width;
 	recorder->base_cfg.input_height = recorder->height;
 	recorder->base_cfg.dst_width = recorder->width;
 	recorder->base_cfg.dst_height = recorder->height;
-	recorder->base_cfg.maxKeyInterval = 5;
+	recorder->base_cfg.maxKeyInterval = H264_IDR;
 	recorder->base_cfg.inputformat = VENC_PIXEL_YUV420; //uv combined
 	recorder->base_cfg.targetbitrate = H264_TB;
 

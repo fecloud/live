@@ -36,6 +36,16 @@ extern "C" {
 #define H264_TB 1024 * 1024
 #endif
 
+//h264编码关键帧率 IDR
+#ifndef H264_IDR
+#define H264_IDR 5
+#endif
+
+//V4L采集帧率
+#ifndef CAP_FPS
+#define CAP_FPS 30
+#endif
+
 typedef void (*DataCallBack)(int type, void* cookie,void* data);
 
 typedef struct Video_Recorder
