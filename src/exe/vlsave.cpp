@@ -76,7 +76,7 @@ int main(int argc, char **argv)
 							LocalDateTime ld;
 							cout << ld.year() << "-" << ld.month() << "-" << ld.day() << " " << ld.hour() << ":" << ld.minute() << ":" << ld.second() << " recevie fps:" << fps
 									<< endl;
-							fps = 0;
+							fps = 1;
 							time = LocalDateTime().second();
 						}
 					}
