@@ -10,9 +10,6 @@
 #include "Poco/DateTime.h"
 #include "Poco/Timestamp.h"
 
-using namespace Poco;
-using namespace Poco::Net;
-
 NetH264Reader::NetH264Reader(char *host) :
 		address(string(host)), head(12), nalu(4)
 {
@@ -27,11 +24,11 @@ bool NetH264Reader::open()
 {
 	try
 	{
-		socket.connect(address, Timespan(10, 0));
-		socket.setReceiveTimeout(Timespan(10, 0));
+		socket.connect(address, Poco::Timespan(10, 0));
+		socket.setReceiveTimeout(Poco::Timespan(10, 0));
 		const char *hand = "vlserver";
 		socket.sendBytes(hand, strlen(hand));
-	} catch (Exception& e)
+	} catch (Poco::Exception& e)
 	{
 		cout << e.displayText() << endl;
 		return false;
@@ -63,7 +60,7 @@ bool NetH264Reader::readNaluBytes(int length)
 			read += tread;
 		}
 
-	} catch (Exception& e)
+	} catch (Poco::Exception& e)
 	{
 		return false;
 	}
@@ -91,7 +88,7 @@ bool NetH264Reader::readBytes(int length)
 				read += tread;
 			}
 
-		} catch (Exception& e)
+		} catch (Poco::Exception& e)
 		{
 			return false;
 		}
@@ -121,7 +118,7 @@ bool NetH264Reader::readHeadBytes(int length)
 			read += tread;
 		}
 
-	} catch (Exception& e)
+	} catch (Poco::Exception& e)
 	{
 		return false;
 	}
@@ -145,8 +142,8 @@ H264NALU* NetH264Reader::readH264()
 {
 	if (readHeadBytes(head.getCapacity()))
 	{
-		Timestamp t(getHeadTime());
-		DateTime ld(t);
+		Poco::Timestamp t(getHeadTime());
+		Poco::DateTime ld(t);
 
 		//cout << "getHeadTime 1 " << ld.minute() << " " <<ld.second() << endl;
 		//cout << "getHeadTime 2 " << LocalDateTime().minute() << " " << LocalDateTime().second() << endl;

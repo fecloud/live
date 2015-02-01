@@ -24,7 +24,7 @@ int main(int argc, char **argv)
 		cout << "Uage:" << argv[0] << " <port> [ threads ]" << endl;
 		exit(0);
 	}
-	VideoLiveObservable* oable = VideoLiveObservable::createNew();
+	VideoLiveObservable* oable = VideoLiveObservable::getInstance();
 	VideoLiveServer().run(argc, argv);
 	VideoLiveObservable::destory(oable);
 	return 1;

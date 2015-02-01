@@ -13,6 +13,8 @@ using namespace std;
 
 static VideoLiveObservable* instance = NULL;
 
+pthread_once_t once = PTHREAD_ONCE_INIT; 
+
 void cdear(int type, void* cookie, void* data)
 {
 	VideoLiveObservable* observer = (VideoLiveObservable*) cookie;
@@ -44,13 +46,15 @@ VideoLiveObservable::~VideoLiveObservable()
 	pthread_mutex_destroy(&mt);
 }
 
-VideoLiveObservable* VideoLiveObservable::createNew()
+VideoLiveObservable* VideoLiveObservable::getInstance()
 {
-	if (instance == NULL)
-	{
+	pthread_once(&once, &VideoLiveObservable::init); 
+	return instance; 
+}
+
+void VideoLiveObservable::init()
+{
 		instance = new VideoLiveObservable();
-	}
-	return instance;
 }
 
 void VideoLiveObservable::destory(VideoLiveObservable* instance)

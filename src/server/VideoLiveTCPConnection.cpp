@@ -153,7 +153,7 @@ void VideoLiveTCPConnection::doWork()
 
 void VideoLiveTCPConnection::run()
 {
-	VideoLiveObservable* instance = VideoLiveObservable::createNew();
+	VideoLiveObservable* instance = VideoLiveObservable::getInstance();
 
 	LocalDateTime ld;
 

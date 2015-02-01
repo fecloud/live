@@ -32,7 +32,8 @@ protected:
 	virtual ~VideoLiveObservable();
 
 public:
-	static VideoLiveObservable* createNew();
+	static VideoLiveObservable* getInstance();
+	static void init();
 	static void destory(VideoLiveObservable*);
 	VencSeqHeader* registerVideoLiveObserver(VideoLiveObserver*);
 	void unRegisterVideoLiveObserver(VideoLiveObserver*);

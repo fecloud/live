@@ -19,14 +19,12 @@
 
 #include <stdio.h>
 
-using namespace Poco::Net;
-
 class NetH264Reader: public H264Reader
 {
 
 private:
-	SocketAddress address;
-	StreamSocket socket;
+	Poco::Net::SocketAddress address;
+	Poco::Net::StreamSocket socket;
 	Bytes head;
 	Bytes nalu;
 	bool readNaluBytes(int length);
