@@ -1,5 +1,5 @@
 
-prefix=/usr/local
+prefix=/data/app/videolive
 
 CC=$(CROSS_COMPILE)gcc
 CXX=$(CROSS_COMPILE)g++
@@ -65,6 +65,7 @@ help:
 install:
 	mkdir -p $(prefix)
 	cp vlserver $(prefix)/vlserver
+	cp vlserver.sh /etc/init.d/vlserver
 	cp vlrtmp $(prefix)/vlrtmp
 	cp vlrtsp $(prefix)/vlrtsp
 	cp vlsave $(prefix)/vlsave
