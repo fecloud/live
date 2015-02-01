@@ -66,6 +66,7 @@ install:
 	mkdir -p $(prefix)
 	cp vlserver $(prefix)/vlserver
 	cp vlserver.sh /etc/init.d/vlserver
+	chmod 711 /etc/init.d/vlserver
 	cp vlrtmp $(prefix)/vlrtmp
 	cp vlrtsp $(prefix)/vlrtsp
 	cp vlsave $(prefix)/vlsave
