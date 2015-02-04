@@ -23,7 +23,7 @@ int main(int argc, char **argv)
 	}
 	NetH264Reader reader(argv[1]);
 
-	RTMPOutPutStream output(argv[2], false, 25);
+	RTMPOutPutStream output(argv[2], true, 25);
 	FLVEncoder encoder(&reader, &output);
 	encoder.encoder();
 }
