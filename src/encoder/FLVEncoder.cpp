@@ -48,7 +48,7 @@ FLVEncoder::FLVEncoder(H264Reader* in, MediaOutputStream* out)
 
 FLVEncoder::~FLVEncoder()
 {
-	cout << "~FLVEncoder" << endl;
+	//cout << "~FLVEncoder" << endl;
 	findSPSPPS = false;
 	findSEIIDR = false;
 	delete sps;
@@ -64,10 +64,17 @@ bool FLVEncoder::checkInAndOut()
 {
 	if (in && out)
 	{
-		if (in->open() && out->open())
+		if (!in->open())
 		{
-			return true;
+			cout << "open input fail" << endl;
+			return false;
 		}
+		if (!out->open())
+		{
+			cout << "open output fail" << endl;
+			return false;
+		}
+		return true;
 	}
 	return false;
 }
@@ -86,12 +93,12 @@ bool FLVEncoder::closeInAndOut()
 
 bool FLVEncoder::encoderOnMetaData()
 {
-	cout << "encoderOnMetaData" << endl;
+	//cout << "encoderOnMetaData" << endl;
 	Struct* st = new Struct();
 	int width = 0;
 	int height = 0;
 	h264_decode_sps(sps->getData(), sps->getLength(), width, height);
-	cout << "w:" << width << "h:" << height << endl;
+	//cout << "w:" << width << "h:" << height << endl;
 	st->put(new String("onMetaData"));
 	ECMA_Array* array = new ECMA_Array();
 	array->put("duration", new Number(0));
@@ -107,7 +114,7 @@ bool FLVEncoder::encoderOnMetaData()
 	buffer->clear();
 	st->encoder(buffer);
 	buffer->flip();
-	cout << "encoderOnMetaData data:length " << buffer->getLength() << endl;
+	//cout << "encoderOnMetaData data:length " << buffer->getLength() << endl;
 	bool result = out->setParam(buffer);
 	delete st;
 	st = NULL;
@@ -116,7 +123,7 @@ bool FLVEncoder::encoderOnMetaData()
 
 bool FLVEncoder::encoderSPSPPS()
 {
-	cout << "encoderSPSPPS" << endl;
+	//cout << "encoderSPSPPS" << endl;
 	buffer->clear();
 	// 写入avc头
 	buffer->put((char) ((KEYF_RAME << 4) | Codec_AVC_H264));
@@ -147,7 +154,7 @@ bool FLVEncoder::encoderSPSPPS()
 	return out->writeHeaders(buffer);
 }
 
-bool FLVEncoder::encodeSEI()
+bool FLVEncoder::encodeKeyFrame()
 {
 	buffer->clear();
 	buffer->put((char) ((KEYF_RAME << 4) | Codec_AVC_H264));
@@ -171,14 +178,19 @@ bool FLVEncoder::encodeSEI()
 			buffer->putInt(sei->getLength());
 			buffer->put(sei->getData(), sei->getLength());
 		}
+		findSEIIDR = true;
+		buffer->putInt(idr->getLength());
+		buffer->put(idr->getData(), idr->getLength());
+
+		buffer->flip();
+		return out->writeFrame(buffer, 1, 0);
 	}
-	findSEIIDR = true;
 
 	buffer->putInt(idr->getLength());
 	buffer->put(idr->getData(), idr->getLength());
 
 	buffer->flip();
-	return out->writeFrame(buffer);
+	return out->writeFrame(buffer, 2, idr->getTime());
 }
 
 bool FLVEncoder::encodeFrame(H264NALU* nalu)
@@ -194,7 +206,7 @@ bool FLVEncoder::encodeFrame(H264NALU* nalu)
 	buffer->put(nalu->getData(), nalu->getLength());
 
 	buffer->flip();
-	return out->writeFrame(buffer);
+	return out->writeFrame(buffer, 3, nalu->getTime());
 }
 
 bool FLVEncoder::encodeEndFrame()
@@ -207,7 +219,7 @@ bool FLVEncoder::encodeEndFrame()
 	buffer->put((char) 0x0);
 
 	buffer->flip();
-	return out->writeFrame(buffer, true);
+	return out->writeFrame(buffer, 4, 0);
 }
 
 void FLVEncoder::encoder()
@@ -218,6 +230,7 @@ void FLVEncoder::encoder()
 		bool finish = false;
 		while ((nalu = in->readH264()) && !finish)
 		{
+//			cout << "type:" << (int) nalu->getType() << " " << nalu->getLength() << endl;
 			switch (nalu->getType())
 			{
 			case SEI:
@@ -229,7 +242,7 @@ void FLVEncoder::encoder()
 				idr->setLength(nalu->getLength());
 				if (idr->getLength())
 				{
-					if (!encodeSEI())
+					if (!encodeKeyFrame())
 						finish = true;
 				}
 				break;
@@ -262,55 +275,9 @@ void FLVEncoder::encoder()
 		if (!finish)
 			encodeEndFrame();
 	}
-	else
-	{
-		std::cout << "open input or input error" << std::endl;
-	}
 
 	closeInAndOut();
 
-	std::cout << "encoder finish" << std::endl;
+	//std::cout << "encoder finish" << std::endl;
 }
 
-bool FLVEncoder::encoder(H264NALU* nalu)
-{
-
-	switch (nalu->getType())
-	{
-	case SEI:
-		memcpy(sei->getData(), nalu->getData(), nalu->getLength());
-		sei->setLength(nalu->getLength());
-		break;
-	case IDR:
-		memcpy(idr->getData(), nalu->getData(), nalu->getLength());
-		idr->setLength(nalu->getLength());
-		if (idr->getLength())
-		{
-			return encodeSEI();
-		}
-		break;
-	case SPS:
-		memcpy(sps->getData(), nalu->getData(), nalu->getLength());
-		sps->setLength(nalu->getLength());
-		break;
-	case PPS:
-		memcpy(pps->getData(), nalu->getData(), nalu->getLength());
-		pps->setLength(nalu->getLength());
-		if (sps->getLength() && pps->getLength() && !findSPSPPS)
-		{
-			if (encoderOnMetaData() && encoderSPSPPS())
-			{
-				findSPSPPS = true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-		break;
-	default:
-		return encodeFrame(nalu);
-
-	}
-	return false;
-}

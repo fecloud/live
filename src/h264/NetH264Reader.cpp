@@ -11,7 +11,7 @@
 #include "Poco/Timestamp.h"
 
 NetH264Reader::NetH264Reader(char *host) :
-		address(string(host)), head(12), nalu(4)
+		address(string(host)), head(12), nalu(4), pretime(0)
 {
 }
 
@@ -146,9 +146,14 @@ H264NALU* NetH264Reader::readH264()
 		Poco::DateTime ld(t);
 
 		//cout << "getHeadTime 1 " << ld.minute() << " " <<ld.second() << endl;
-		//cout << "getHeadTime 2 " << LocalDateTime().minute() << " " << LocalDateTime().second() << endl;
+		//cout << "getHeadTime 2 " << Poco::LocalDateTime().minute() << " " << Poco::LocalDateTime().second() << endl;
 		if (readBytes(getHeadBodyLength()))
 		{
+			if (pretime != 0)
+			{
+				byte->setTime(getHeadTime() - pretime);
+			}
+			pretime = getHeadTime();
 			return byte;
 		}
 	}

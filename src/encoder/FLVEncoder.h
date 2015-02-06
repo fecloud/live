@@ -42,7 +42,7 @@ private:
 protected:
 	bool encoderSPSPPS();
 	bool encoderOnMetaData();
-	bool encodeSEI();
+	bool encodeKeyFrame();
 	bool encodeFrame(H264NALU*);
 	bool encodeEndFrame();
 

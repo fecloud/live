@@ -17,21 +17,23 @@
 #include "flv/FLVOutPutStream.h"
 #include "flv/lang/String.h"
 
-class RTMPOutPutStream: public FLVOutPutStream {
+class RTMPOutPutStream: public FLVOutPutStream
+{
+
 private:
 	char* url;
 	bool live;
-	long long pretime;
 
 protected:
-	virtual bool writeData(char, FLVTagBody*);
-	virtual long getTimeStamp();
+	virtual bool sendData(char packet_type, char data_type, Bytes* bytes);
 
 public:
-	RTMPOutPutStream(const char*, bool, unsigned int);
+	RTMPOutPutStream(const char*, bool);
 	virtual ~RTMPOutPutStream();
 	virtual bool open();
 	virtual bool setParam(Bytes*);
+	virtual bool writeHeaders(Bytes*);
+	virtual bool writeFrame(Bytes*, char, unsigned);
 	virtual bool flush();
 	virtual bool close();
 	void setUrl(char*);

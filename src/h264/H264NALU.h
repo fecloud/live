@@ -42,17 +42,18 @@ class H264NALU: public Bytes
 
 private:
 	char type;
+	unsigned time;
 
 public:
 	H264NALU();
 	H264NALU(int);
-	H264NALU(char*data, int length) :
-			Bytes(data, length), type(0)
-	{
-	}
+	H264NALU(char*data, int length);
 	virtual ~H264NALU();
 	char getType();
 	void setType(char type);
+	unsigned getTime();
+	void setTime(unsigned time);
+
 };
 
 #endif /* H264NALU_H_ */
