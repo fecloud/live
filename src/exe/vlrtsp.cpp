@@ -38,7 +38,7 @@ static void onMatroskaDemuxCreation(MatroskaFileServerDemux* newDemux, void* /*c
 	demux = newDemux;
 	newMatroskaDemuxWatchVariable = 1;
 }
-
+#ifndef NO_MAIN
 int main(int argc, char** argv)
 {
 	// Begin by setting up our usage environment:
@@ -94,6 +94,7 @@ int main(int argc, char** argv)
 
 	return 0; // only to prevent compiler warning
 }
+#endif
 
 static void announceStream(RTSPServer* rtspServer, ServerMediaSession* sms, char const* streamName, char const* inputFileName)
 {

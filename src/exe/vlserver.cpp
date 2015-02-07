@@ -17,6 +17,7 @@ using namespace std;
 
 using namespace std;
 
+#ifndef NO_MAIN
 int main(int argc, char **argv)
 {
 	if (argc < 2)
@@ -29,3 +30,4 @@ int main(int argc, char **argv)
 	VideoLiveObservable::destory(oable);
 	return 1;
 }
+#endif

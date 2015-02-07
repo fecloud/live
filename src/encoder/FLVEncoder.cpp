@@ -240,6 +240,7 @@ void FLVEncoder::encoder()
 			case IDR:
 				memcpy(idr->getData(), nalu->getData(), nalu->getLength());
 				idr->setLength(nalu->getLength());
+				idr->setTime(nalu->getTime());
 				if (idr->getLength())
 				{
 					if (!encodeKeyFrame())

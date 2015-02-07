@@ -23,6 +23,7 @@ static void sigroutine(int dunno)
     run = 0;
 }
 
+#ifndef NO_MAIN
 int main(int argc, char **argv)
 {
 
@@ -106,3 +107,4 @@ int main(int argc, char **argv)
 
 }
 
+#endif

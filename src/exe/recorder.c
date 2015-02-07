@@ -30,7 +30,7 @@ void cdear(int type, void* cookie, void* data)
 
 /* 信号处理例程，其中dunno将会得到信号的值 */
 static void sigroutine(int dunno)
-{ 
+{
     stop_video_recorder(recorder);
 	free(recorder);
 	recorder = NULL;
@@ -43,7 +43,7 @@ void testCamera(void)
 	recorder->setDataCallBack(recorder, (void*) cdear, (void*) cdear);
 	start_video_recorder(recorder);
 }
-
+#ifndef NO_MAIN
 int main(int argc, char **argv)
 {
 	t = current_time_m();
@@ -53,4 +53,4 @@ int main(int argc, char **argv)
 	testCamera();
 	return 1;
 }
-
+#endif

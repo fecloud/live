@@ -138,22 +138,23 @@ long long NetH264Reader::getHeadTime()
 	return head.getLong();
 }
 
+long long ht= 0;
 H264NALU* NetH264Reader::readH264()
 {
 	if (readHeadBytes(head.getCapacity()))
 	{
-		Poco::Timestamp t(getHeadTime());
-		Poco::DateTime ld(t);
+//		Poco::Timestamp t(getHeadTime());
+//		Poco::DateTime ld(t);
 
 		//cout << "getHeadTime 1 " << ld.minute() << " " <<ld.second() << endl;
 		//cout << "getHeadTime 2 " << Poco::LocalDateTime().minute() << " " << Poco::LocalDateTime().second() << endl;
 		if (readBytes(getHeadBodyLength()))
 		{
-			if (pretime != 0)
-			{
-				byte->setTime(getHeadTime() - pretime);
-			}
-			pretime = getHeadTime();
+			//cout << (getHeadTime() -ht) << endl;
+			byte->setTime((getHeadTime() -ht));
+			ht  = getHeadTime();
+			//cout << "time:" << getHeadTime()<<endl;
+			//byte->setTime((int)(0xFFFFFFFFFFFFFFFF & getHeadTime()));
 			return byte;
 		}
 	}
