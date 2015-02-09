@@ -35,9 +35,13 @@ Video_Recorder* create_video_recorder(int width, int height)
 
 }
 
+#if CAP_FPS == 15
+static long long g_time = 0;
+#endif
+
 static int cameraSourceCallback(void *cookie, void *data)
 {
-//	printf("cameraSourceCallback %lld\n",current_time());
+	//printf("cameraSourceCallback %lld\n",current_time());
 	Video_Recorder* recorder = (Video_Recorder*) cookie;
 
 	cedarv_encoder_t* venc_device = recorder->venc_device;
@@ -48,24 +52,31 @@ static int cameraSourceCallback(void *cookie, void *data)
 	struct v4l2_buffer *p_buf = (struct v4l2_buffer *) data;
 	v4l2_mem_map_t* p_v4l2_mem_map = GetMapmemAddress(getV4L2ctx(cameraDevice));
 
-	void *buffer = (void *) p_v4l2_mem_map->mem[p_buf->index];
-	/* get input buffer*/
-	result = venc_device->ioctrl(venc_device, VENC_CMD_GET_ALLOCATE_INPUT_BUFFER, &input_buffer);
-	if (result == 0)
-	{
-		//printf("s:%lld\n",current_time());
-		YUV422To420((unsigned char*) buffer, input_buffer.addrvirY, recorder->width, recorder->height);
-		waterMarkShowTime(recorder->waterMark, input_buffer.addrvirY, recorder->width, recorder->height, 10, 10);
-		//printf("e:%lld\n",current_time());
-		input_buffer.addrvirC = input_buffer.addrvirY + recorder->width * recorder->height;
-		venc_device->ioctrl(venc_device, VENC_CMD_FLUSHCACHE_ALLOCATE_INPUT_BUFFER, &input_buffer);
-		result = venc_device->ioctrl(venc_device, VENC_CMD_ENQUENE_INPUT_BUFFER, &input_buffer);
-		if (result < 0)
+#if CAP_FPS == 15
+	if(current_time() - g_time > 35){
+#endif
+		void *buffer = (void *) p_v4l2_mem_map->mem[p_buf->index];
+		/* get input buffer*/
+		result = venc_device->ioctrl(venc_device, VENC_CMD_GET_ALLOCATE_INPUT_BUFFER, &input_buffer);
+		
+		//printf("into result:%d %lld\n",result,current_time());
+		if (result == 0 )
 		{
-			usleep(1000);
+			//printf("into encoder:%lld\n",current_time());
+			YUV422To420((unsigned char*) buffer, input_buffer.addrvirY, recorder->width, recorder->height);
+			waterMarkShowTime(recorder->waterMark, input_buffer.addrvirY, recorder->width, recorder->height, 10, 10);
+			//printf("e:%lld\n",current_time());
+			input_buffer.addrvirC = input_buffer.addrvirY + recorder->width * recorder->height;
+			venc_device->ioctrl(venc_device, VENC_CMD_FLUSHCACHE_ALLOCATE_INPUT_BUFFER, &input_buffer);
+			result = venc_device->ioctrl(venc_device, VENC_CMD_ENQUENE_INPUT_BUFFER, &input_buffer);
 		}
+		
+#if CAP_FPS == 15
+		g_time = current_time();
 	}
-
+#endif
+	//printf("into encoder:%lld end\n",current_time());
+	
 	cameraDevice->returnFrame(cameraDevice, p_buf->index);
 	return 1;
 }
