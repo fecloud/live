@@ -157,7 +157,7 @@ int start_video_recorder(Video_Recorder* recorder)
 	recorder->base_cfg.targetbitrate = H264_TB;
 
 	// init allocate param
-	recorder->alloc_parm.buffernum = 2;
+	recorder->alloc_parm.buffernum = 4;
 
 	cedarx_hardware_init(0);
 	CLOG("%s", "cedarx_hardware_init");
