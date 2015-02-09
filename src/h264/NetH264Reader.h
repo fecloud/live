@@ -32,6 +32,7 @@ private:
 	bool readHeadBytes(int length);
 	int getHeadBodyLength();
 	long long getHeadTime();
+	long long pretime;
 
 public:
 	NetH264Reader(char*);

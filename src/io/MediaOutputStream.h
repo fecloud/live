@@ -23,8 +23,7 @@ public:
 	virtual bool open() = 0;
 	virtual bool setParam(Bytes*) = 0;
 	virtual bool writeHeaders(Bytes*) = 0;
-	virtual bool writeFrame(Bytes*) = 0;
-	virtual bool writeFrame(Bytes*,bool) = 0;
+	virtual bool writeFrame(Bytes*,char,unsigned) = 0;
 	virtual bool flush() = 0;
 	virtual bool close() = 0;
 };

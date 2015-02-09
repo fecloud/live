@@ -201,7 +201,7 @@ AWCameraDevice* CreateCamera(int width, int height)
 	CameraCtx->devide_id = 0;
 	CameraCtx->width = width;
 	CameraCtx->height = height;
-	CameraCtx->framerate = 30;
+	CameraCtx->framerate = 15;
 
 	CameraCtx->v4l2ctx = CreateCameraContext();
 

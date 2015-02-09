@@ -14,14 +14,16 @@ H264Reader::H264Reader()
 	filename = 0;
 	byte = new H264NALU(512000);
 	buffer = new Bytes(READ_BUFFER);
+	oneframetime = 0;
 }
 
-H264Reader::H264Reader(char* file)
+H264Reader::H264Reader(char* file, unsigned int framerate)
 {
 	filename = new char[strlen(file) + 1];
-	strcpy(filename,file);
+	strcpy(filename, file);
 	byte = new H264NALU(512000);
 	buffer = new Bytes(READ_BUFFER);
+	oneframetime = 1000 / framerate;
 }
 
 H264Reader::~H264Reader()
@@ -76,16 +78,23 @@ bool H264Reader::findNALU()
 
 		}
 	}
+	if (file.eof())
+	{
+		if (byte->getLength())
+			return true;
+	}
 	return false;
 }
 
 int counts = 0;
+int sum = 0;
+;
 
 H264NALU* H264Reader::readH264()
 {
 	H264NALU *h264nalu = NULL;
 	byte->clear();
-	while (!file.eof())
+	while (true)
 	{
 		//缓存里面没有数据了
 		if (!buffer->hasRemaining())
@@ -95,14 +104,13 @@ H264NALU* H264Reader::readH264()
 			int count = file.gcount();
 			if (count > 0)
 			{
+				sum += count;
 				buffer->setLength(count);
 				buffer->flip();
 			}
 			else
-			{
 				//没有读取到数据
 				break;
-			}
 		}
 		if (findNALU())
 		{
@@ -115,6 +123,7 @@ H264NALU* H264Reader::readH264()
 	if (byte->getLength() > 0)
 	{
 		h264nalu = byte;
+		h264nalu->setTime(oneframetime);
 		h264nalu->setType(0x1F & byte->getData()[0]);
 	}
 

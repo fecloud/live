@@ -13,7 +13,7 @@
 #include "encoder/FLVEncoder.h"
 
 using namespace std;
-
+#ifndef NO_MAIN
 int main(int argc, char **argv)
 {
 	if (argc < 3)
@@ -23,8 +23,8 @@ int main(int argc, char **argv)
 	}
 	NetH264Reader reader(argv[1]);
 
-	RTMPOutPutStream output(argv[2], false, 25);
+	RTMPOutPutStream output(argv[2], true);
 	FLVEncoder encoder(&reader, &output);
 	encoder.encoder();
 }
-
+#endif

@@ -28,13 +28,14 @@ class H264Reader: public MediaInputStream
 protected:
 	char* filename;
 	ifstream file;
+	unsigned oneframetime;
 	H264NALU* byte;
 	Bytes* buffer;
 	bool findNALU();
 
 public:
 	H264Reader();
-	H264Reader(char* file);
+	H264Reader(char *file, unsigned framerate);
 	virtual ~H264Reader();
 	virtual bool close();
 	virtual H264NALU* readH264();

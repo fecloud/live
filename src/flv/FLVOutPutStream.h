@@ -24,8 +24,7 @@ class FLVOutPutStream: public MediaOutputStream
 
 private:
 	char* filename;
-	unsigned long framenum;
-	
+
 protected:
 	ofstream file;
 	/**
@@ -34,19 +33,16 @@ protected:
 	bool writeFileHeader();
 	unsigned int previousTagSize;
 	unsigned long timestamp;
-	unsigned int oneframetime;
-	virtual bool writeData(char,FLVTagBody*);
-	virtual long getTimeStamp();
+	virtual bool writeData(char, Bytes*);
 
 public:
 	FLVOutPutStream();
-	FLVOutPutStream(const char*,unsigned int);
+	FLVOutPutStream(const char*);
 	virtual ~FLVOutPutStream();
 	virtual bool open();
 	virtual bool setParam(Bytes*);
 	virtual bool writeHeaders(Bytes*);
-	virtual bool writeFrame(Bytes*);
-	virtual bool writeFrame(Bytes*,bool);
+	virtual bool writeFrame(Bytes*, char, unsigned);
 	virtual bool flush();
 	virtual bool close();
 	bool writeBytes(const char*, unsigned int);
