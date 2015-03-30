@@ -1,0 +1,42 @@
+#!/bin/sh
+
+PROG="live"
+PROG_PATH="/data/app/$PROG"
+MSG_PREFIX=" *"
+echo "$MSG_PREFIX start install $PROG"
+
+if [ -d "$PROG_PATH" ]
+then
+	rm -rf $PROG_PATH
+fi
+
+mkdir -p $PROG_PATH
+
+cp -v -n ./vlrtmp  $PROG_PATH/
+cp -v -n ./vlsave  $PROG_PATH/
+cp -v -n ./vlserver  $PROG_PATH/
+cp -v -n ./vlserver.sh  $PROG_PATH/
+
+if [ -f "/usr/bin/vlrtmp" ] ;then
+	echo "$MSG_PREFIX not need add to /usr/bin"
+else
+	ln  -f -s $PROG_PATH/vlrtmp /usr/bin/vlrtmp
+fi
+
+if [ -f "/usr/bin/vlsave" ] ;then
+	echo "$MSG_PREFIX not need add to /usr/bin"
+else
+	ln  -f -s $PROG_PATH/vlsave /usr/bin/vlsave
+fi
+
+if [ -f "/etc/init.d/vlserver" ] ;then
+	echo "$MSG_PREFIX not need add to /etc/init.d"
+else
+	ln  -f -s $PROG_PATH/vlserver.sh /etc/init.d/vlserver
+fi
+
+update-rc.d  vlserver defaults 30
+
+echo "$MSG_PREFIX install sucess $PROG"
+
+service $PROG vlserver

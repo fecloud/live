@@ -13,35 +13,34 @@
 
 ## Fill in name of program here.
 PROG="vlserver"
-PROG_PATH="/data/app/videolive" #::# Not need, but sometimes helpful (if $PROG resides in /opt for example).
+PROG_PATH="/data/app/live" #::# Not need, but sometimes helpful (if $PROG resides in /opt for example).
 PROG_ARGS="8090"
 PID_PATH="/var/run/"
+MSG_PREFIX=" *"
 
 start() {
     if [ -e "$PID_PATH/$PROG.pid" ]; then
         ## Program is running, exit with error.
-        echo "Error! $PROG is currently running!"
+        echo "$MSG_PREFIX $PROG is currently running!"
         exit 1
     else
         ## Change from /dev/null to something like /var/log/$PROG if you want to save output.
-        $PROG_PATH/$PROG $PROG_ARGS 2>&1 >/var/log/$PROG.log &
-        pid=`ps x|grep $PROG |awk '{print $1}' | head -n 1`
-        echo "$PROG started"
-        echo "$pid"
+        $PROG_PATH/$PROG $PROG_ARGS 2>&1 >/dev/null &
+        pid=`ps -ef|grep $PROG |awk '{print $1}' | head -n 1`
+        echo "$MSG_PREFIX $PROG started"
         echo $pid > "$PID_PATH/$PROG.pid"
     fi
 }
 
 stop() {
-    echo "begin stop"
     if [ -e "$PID_PATH/$PROG.pid" ]; then
         ## Program is running, so stop it
         pid=`ps x|grep $PROG |awk '{print $1}' | head -n 1`
         kill -9 $pid &  rm -f  "$PID_PATH/$PROG.pid"
-        echo "$PROG stopped"
+        echo "$MSG_PREFIX $PROG stopped"
     else
         ## Program is not running, exit with error.
-        echo "Error! $PROG not started!"
+        echo "$MSG_PREFIX $PROG not started!"
         exit 1
     fi
 }
