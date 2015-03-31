@@ -5,8 +5,7 @@ PROG_PATH="/data/app/$PROG"
 MSG_PREFIX=" *"
 echo "$MSG_PREFIX start install $PROG"
 
-if [ -d "$PROG_PATH" ]
-then
+if [ -d "$PROG_PATH" ] ; then
 	rm -rf $PROG_PATH
 fi
 
