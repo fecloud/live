@@ -13,6 +13,7 @@ fi
 mkdir -p $PROG_PATH
 
 cp -v -n ./vlrtmp  $PROG_PATH/
+cp -v -n ./vlrtmp.sh  $PROG_PATH/
 cp -v -n ./vlsave  $PROG_PATH/
 cp -v -n ./vlserver  $PROG_PATH/
 cp -v -n ./vlserver.sh  $PROG_PATH/
@@ -35,8 +36,29 @@ else
 	ln  -f -s $PROG_PATH/vlserver.sh /etc/init.d/vlserver
 fi
 
-update-rc.d  vlserver defaults 30
+if [ -f "/etc/init.d/vlrtmp" ] ;then
+	echo "$MSG_PREFIX not need add to /etc/init.d"
+else
+	ln  -f -s $PROG_PATH/vlrtmp.sh /etc/init.d/vlrtmp
+fi
+
+if [ -f "/etc/rc0.d/K30vlserver" ] ; then
+	echo "$MSG_PREFIX not need add vlserver to boot"
+else
+	update-rc.d  vlserver defaults 30
+fi
+
+if [ -f "/etc/rc0.d/K90vlrtmp" ] ; then
+	echo "$MSG_PREFIX not need add vlrtmp to boot"
+else
+	update-rc.d  vlrtmp defaults 90
+fi
+
 
 echo "$MSG_PREFIX install sucess $PROG"
 
-service $PROG vlserver
+service vlserver start
+
+sleep 5
+
+service vlrtmp start
