@@ -19,28 +19,27 @@ PID_PATH="/var/run/"
 MSG_PREFIX=" *"
 
 start() {
-    if [ -e "$PID_PATH/$PROG.pid" ]; then
+    pid=`ps -ef| grep $PROG | awk '{print $1}' | head -n 1`
+    if [ $pid -gt 0 ]; then
         ## Program is running, exit with error.
-        echo "$MSG_PREFIX $PROG is currently running!"
+        echo "$MSG_PREFIX $PROG is currently running..."
         exit 1
     else
         ## Change from /dev/null to something like /var/log/$PROG if you want to save output.
         $PROG_PATH/$PROG $PROG_ARGS 2>&1 >/dev/null &
-        pid=`ps -ef|grep $PROG |awk '{print $1}' | head -n 1`
         echo "$MSG_PREFIX $PROG started"
-        echo $pid > "$PID_PATH/$PROG.pid"
     fi
 }
 
 stop() {
-    if [ -e "$PID_PATH/$PROG.pid" ]; then
+    pid=`ps -ef| grep $PROG | awk '{print $1}' | head -n 1`
+    if [ $pid -gt 0 ]; then
         ## Program is running, so stop it
-        pid=`ps x|grep $PROG |awk '{print $1}' | head -n 1`
-        kill -9 $pid &  rm -f  "$PID_PATH/$PROG.pid"
+        kill -9 $pid
         echo "$MSG_PREFIX $PROG stopped"
     else
         ## Program is not running, exit with error.
-        echo "$MSG_PREFIX $PROG not started!"
+        echo "$MSG_PREFIX $PROG not started"
         exit 1
     fi
 }
@@ -48,7 +47,7 @@ stop() {
 ## Check to see if we are running as root first.
 
 if [ "$(id -u)" != "0" ]; then
-    echo "This script must be run as root" 1>&2
+    echo "$MSG_PREFIX This script must be run as root" 1>&2
     exit 1
 fi
 
