@@ -22,7 +22,6 @@ start() {
     if [ -e "$PID_PATH/$PROG.pid" ]; then
         ## Program is running, exit with error.
         echo "$MSG_PREFIX $PROG is currently running..."
-        exit 1
     else
         ## Change from /dev/null to something like /var/log/$PROG if you want to save output.
         $PROG_PATH/$PROG $PROG_ARGS 2>&1 >/dev/null &
@@ -41,7 +40,6 @@ stop() {
     else
         ## Program is not running, exit with error.
         echo "$MSG_PREFIX $PROG not started!"
-        exit 1
     fi
 }
 
