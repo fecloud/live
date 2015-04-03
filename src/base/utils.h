@@ -12,7 +12,7 @@
 extern "C" {
 #endif /* __cplusplus */
 
-
+#include <stdio.h>
 #include <time.h>
 #include <sys/time.h>
 #include <sys/types.h>
@@ -94,7 +94,7 @@ long long current_time_m();
 /**
  * 保存进程id
  */
-int save_pid(char * path);
+int save_pid(const char * path);
 
 #ifdef __cplusplus
 }
