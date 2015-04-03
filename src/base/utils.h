@@ -15,6 +15,8 @@ extern "C" {
 
 #include <time.h>
 #include <sys/time.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 
 
@@ -88,6 +90,11 @@ long long current_time();
  * 当前的秒
  */
 long long current_time_m();
+
+/**
+ * 保存进程id
+ */
+int save_pid(char * path);
 
 #ifdef __cplusplus
 }

@@ -87,6 +87,20 @@ long long current_time_m()
 	return t;
 }
 
+int save_pid(char * path) {
+	pid_t pid = getppid();
+	FILE *fp = fopen(path, "w+");
+    if (!fp) {
+		printf("open file fail\n");
+        return 0;
+    }
+    fwrite(&pid, sizeof(pid), 1, fp);
+    fclose(fp);
+    fp = NULL;
+	
+	return 1;
+}
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
