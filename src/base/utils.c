@@ -88,7 +88,7 @@ long long current_time_m()
 }
 
 int save_pid(const char * path) {
-	pid_t pid = getppid();
+	pid_t pid = getpid();
 	FILE *fp = fopen(path, "w+");
     if (!fp) {
 		printf("open file fail\n");

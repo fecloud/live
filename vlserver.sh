@@ -15,33 +15,29 @@
 PROG="vlserver"
 PROG_PATH="/data/app/live" #::# Not need, but sometimes helpful (if $PROG resides in /opt for example).
 PROG_ARGS="8090"
-PID_PATH="/var/run/"
+PID_PATH="$PROG_PATH/$PROG.pid"
 MSG_PREFIX=" *"
 
 start() {
-    if [ -e "$PID_PATH/$PROG.pid" ]; then
+    if [ -e "$PID_PATH" ]; then
         ## Program is running, exit with error.
         echo "$MSG_PREFIX $PROG is currently running..."
-        exit 1
     else
         ## Change from /dev/null to something like /var/log/$PROG if you want to save output.
         $PROG_PATH/$PROG $PROG_ARGS 2>&1 >/dev/null &
-        pid=`ps -aux | grep $PROG | awk '{print $2}' | head -n 1`
         echo "$MSG_PREFIX $PROG started"
-        echo $pid > "$PID_PATH/$PROG.pid"
     fi
 }
 
 stop() {
-    if [ -e "$PID_PATH/$PROG.pid" ]; then
+    if [ -e "$PID_PATH" ]; then
         ## Program is running, so stop it
-        pid=`ps -aux| grep $PROG |awk '{print $2}' | head -n 1`
-        kill -9 $pid &  rm -f  "$PID_PATH/$PROG.pid"
+        pid=`cat $PID_PATH | head -n 1`
+        kill -9 $pid &  rm -f  "$PID_PATH"
         echo "$MSG_PREFIX $PROG stopped"
     else
         ## Program is not running, exit with error.
         echo "$MSG_PREFIX $PROG not started!"
-        exit 1
     fi
 }
 

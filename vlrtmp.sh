@@ -15,7 +15,7 @@
 PROG="vlrtmp"
 PROG_PATH="/data/app/live" #::# Not need, but sometimes helpful (if $PROG resides in /opt for example).
 PROG_ARGS="localhost:8090 rtmp://localhost/live/demo"
-PID_PATH="$PROG_PATH.pid"
+PID_PATH="$PROG_PATH/$PROG.pid"
 MSG_PREFIX=" *"
 
 start() {
@@ -33,7 +33,8 @@ stop() {
     if [ -e "$PID_PATH" ]; then
         ## Program is running, so stop it
         pid=`cat $PID_PATH | head -n 1`
-        kill -9 $pid && rm -f  "$PID_PATH"
+        kill -9 $pid &
+        rm -f  "$PID_PATH" &
         echo "$MSG_PREFIX $PROG stopped"
     else
         ## Program is not running, exit with error.

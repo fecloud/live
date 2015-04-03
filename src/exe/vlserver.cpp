@@ -13,6 +13,7 @@ using namespace std;
 
 #include <iostream>
 
+#include "base/utils.h"
 #include "server/VideoLiveServer.h"
 
 using namespace std;
@@ -25,6 +26,9 @@ int main(int argc, char **argv)
 		cout << "Uage:" << argv[0] << " <port> [ threads ]" << endl;
 		exit(0);
 	}
+	string pid_path(argv[0]);
+	pid_path = pid_path + ".pid";
+	save_pid(pid_path.c_str());
 	VideoLiveObservable* oable = VideoLiveObservable::getInstance();
 	VideoLiveServer().run(argc, argv);
 	VideoLiveObservable::destory(oable);
