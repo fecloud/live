@@ -19,9 +19,22 @@ PID_PATH="$PROG_PATH/$PROG.pid"
 MSG_PREFIX=" *"
 
 start() {
+	PROG_STATUS=0
+#check process status
     if [ -e "$PID_PATH" ]; then
-        ## Program is running, exit with error.
-        echo "$MSG_PREFIX $PROG is currently running..."
+		for line in `cat $PID_PATH`
+		do
+			count=`ps -ef |grep $line |grep -v "grep" |wc -l`
+    		if [ $count -gt 0 ]; then
+        		PROG_STATUS=1
+       			break;
+    		fi
+		done
+	fi
+
+	if [ $PROG_STATUS -eq 1 ]; then
+		## Program is running, exit with error.
+		echo "$MSG_PREFIX $PROG is currently running..."
     else
         ## Change from /dev/null to something like /var/log/$PROG if you want to save output.
         $PROG_PATH/$PROG $PROG_ARGS 2>&1 >/dev/null &
