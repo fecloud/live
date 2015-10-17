@@ -14,7 +14,7 @@
 ## Fill in name of program here.
 PROG="vlserver"
 PROG_PATH="/data/app/live" #::# Not need, but sometimes helpful (if $PROG resides in /opt for example).
-PROG_ARGS="8090"
+PROG_ARGS="19350"
 PID_PATH="$PROG_PATH/$PROG.pid"
 MSG_PREFIX=" *"
 

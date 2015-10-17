@@ -14,7 +14,7 @@
 ## Fill in name of program here.
 PROG="vlrtmp"
 PROG_PATH="/data/app/live" #::# Not need, but sometimes helpful (if $PROG resides in /opt for example).
-PROG_ARGS="localhost:8090 rtmp://localhost/live/demo"
+PROG_ARGS="localhost:19350 rtmp://localhost/live/demo"
 PID_PATH="$PROG_PATH/$PROG.pid"
 MSG_PREFIX=" *"
 
